@@ -1,8 +1,5 @@
 package net.nosegrind.apiframework
 
-import grails.transaction.Transactional
-
-
 class Person implements Serializable{
 
 

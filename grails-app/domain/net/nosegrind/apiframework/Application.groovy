@@ -1,6 +1,6 @@
 package net.nosegrind.apiframework
 
-class Person implements Serializable {
+class Application implements Serializable {
 
 	String appName
 	boolean enabled=true

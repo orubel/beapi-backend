@@ -1,5 +1,5 @@
 grails.config.locations = [
-		"file:${userHome}/.orp/orp.groovy",
-		"file:${userHome}/.orp/orp.yml"
+		"file:${userHome}/.beapi/beapi.groovy",
+		"file:${userHome}/.beapi/beapi.yml"
 ]
 

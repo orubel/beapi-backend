@@ -1,8 +1,7 @@
 package net.nosegrind.auth
 
 
-import main.groovy.net.nosegrind.auth.AuthInfo;
-import net.nosegrind.auth.GrailsOAuthService;
+import main.groovy.net.nosegrind.auth.AuthInfo
 import net.nosegrind.security.SpringSecuritySigninService;
 import net.nosegrind.apiframework.Person
 

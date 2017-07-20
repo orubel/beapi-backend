@@ -104,11 +104,6 @@ dependencies {
 
     //compile 'org.grails.plugins:db-reverse-engineer:4.0.0'
 
-    // quartz scheduler
-    //compile 'org.grails.plugins:quartz:2.0.9'
-
-    //runtime "org.grails.plugins:scaffolding"
-
     testCompile "org.grails.plugins:geb"
     testCompile "org.grails:grails-plugin-testing"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
