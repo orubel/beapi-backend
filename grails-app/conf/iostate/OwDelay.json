@@ -1,0 +1,108 @@
+/* JSON API Object */
+/* ****************************************************************************
+ * Copyright 2014 Owen Rubel
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed is distributed on an "AS IS" BASIS,WITHOUT WARRANTIES 
+ * OR CONDITIONS OF ANY KIND, either express or implied.
+ *****************************************************************************/
+// NOTES
+
+/* 'permitAll' needs to always come first so other roles can make use of it
+* as they come afterward
+
+net.nosegrind.IOState
+*/
+
+	
+{
+    "NAME":"owDelay",
+    "VALUES": {
+        "id": {
+            "type" : "PKEY",
+            "description" : "ID for PacketLossRate"
+        },
+        "version": {
+            "type" : "Long",
+            "description":"Version for Updating Packet Loss Rate"
+        },
+	"reportId" : {
+	    "type" : "FKEY",
+	    "description" : "Foreign Key to PacketReport."
+	},
+	"timestamp" : {
+	    "type" : "Long",
+	    "description" : "Timestamp for grouping data"
+	},
+	"maximum" : {
+	    "type" : "String",
+	    "description" : "Statistical value"
+	},
+	"mean" : {
+	    "type" : "String",
+	    "description" : "Statistical value"
+	},
+	"median" : {
+	    "type" : "String",
+	    "description" : "Statistical value"
+	},
+	"minimum" : {
+	    "type" : "String",
+	    "description" : "Statistical value"
+	},
+	"mode" : {
+	    "type" : "String",
+	    "description" : "Statistical value"
+	},
+	"standardDeviation" :{
+	    "type" : "String",
+	    "description" : "Statistical value"
+	},
+	"variance" : {
+	    "type" : "String",
+	    "description" : "Statistical value"
+	},
+	"values" : {
+	    "type" : "String",
+	    "description" : "List of values measuring num of packets and return times"
+	}
+    },
+	"CURRENTSTABLE": "1",
+	"VERSION": {
+		"1": {
+			"DEFAULTACTION":"listByPacketReport",
+			"URI": {
+			    "listByPacketReport": {
+			     	"METHOD":"GET",
+			    	"DESCRIPTION":"List OwDelay By PacketReport",
+			    	"ROLES":{
+				    "DEFAULT":["ROLE_ADMIN"],
+				    "BATCH":["ROLE_ADMIN"],
+				    "HOOK":["ROLE_ADMIN"]
+				},
+			        "REQUEST": {
+			            "permitAll":["id"]
+			        },
+			        "RESPONSE": {
+			        	"permitAll":["id","timestamp"]
+			        }
+			    },
+			    "getById": {
+			     	"METHOD":"GET",
+			    	"DESCRIPTION":"List OwDelay By Id",
+			    	"ROLES":{
+				    "DEFAULT":["ROLE_ADMIN"],
+				    "BATCH":["ROLE_ADMIN"],
+				    "HOOK":["ROLE_ADMIN"]
+				},
+			        "REQUEST": {
+			            "permitAll":["id"]
+			        },
+			        "RESPONSE": {
+			        	"permitAll":["values"]
+			        }
+			    }
+			}
+		}
+	}
+}

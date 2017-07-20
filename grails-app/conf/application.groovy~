@@ -1,0 +1,193 @@
+grails.config.locations = [
+		"file:${userHome}/.orp/orp.groovy",
+		"file:${userHome}/.orp/orp.yml"
+]
+
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+
+
+
+// Added by the BeAPI API Framework plugin:
+apitoolkit.attempts= 5
+apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.chaining.enabled= true
+apitoolkit.batching.enabled= true
+apitoolkit.encoding= 'UTF-8'
+apitoolkit.user.roles= ['ROLE_USER']
+apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+apitoolkit.serverType= 'master'
+apitoolkit.webhook.services= ['iostate']
+apitoolkit.iostate.preloadDir= '/home/owenrubel/.iostate'
+apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
+apitoolkit.corsInterceptor.excludeEnvironments= ['production']
+apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+

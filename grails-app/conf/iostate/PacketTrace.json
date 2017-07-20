@@ -1,0 +1,120 @@
+/* JSON API Object */
+/* ****************************************************************************
+ * Copyright 2014 Owen Rubel
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed is distributed on an "AS IS" BASIS,WITHOUT WARRANTIES 
+ * OR CONDITIONS OF ANY KIND, either express or implied.
+ *****************************************************************************/
+// NOTES
+
+/* 'permitAll' needs to always come first so other roles can make use of it
+* as they come afterward
+
+net.nosegrind.IOState
+*/
+
+	
+{
+    "NAME":"packetTrace",
+    "VALUES": {
+        "id": {
+            "type" : "PKEY",
+            "description" : "ID for PacketLossRate"
+        },
+        "version": {
+            "type" : "Long",
+            "description":"Version for Updating Packet Loss Rate"
+        },
+	"inputSource" : {
+	    "type" : "Long",
+	    "description" : "Source where call originates"
+	},
+	"inputDestination" : {
+	    "type" : "Long",
+	    "description" : "Source where call ends"
+	},
+	"reportId" : {
+	    "type" : "FKEY",
+	    "description" : "Foreign Key to PacketReport."
+	},
+	"timestamp" : {
+	    "type" : "Long",
+	    "description" : "Timestamp for grouping data"
+	},
+	"errorMessage" : {
+	    "type" : "String",
+	    "description" : "A string indicating if an error occurred for the probe. It is null if success is 1 and should be populated if success is 0."
+	},
+	"ip" : {
+	    "type" : "String",
+	    "description" : "The IP address returned by the probe"
+	},
+	"latitude" : {
+	    "type" : "String",
+	    "description" : "GEOCode latitude of IP"
+	},
+	"longitude" : {
+	    "type" : "String",
+	    "description" : "GEOCode longitude of IP"
+	},
+	"mtu" : {
+	    "type" : "Integer",
+	    "description" : "The maximum transmission unit measured by the probe. This is only populated for tracepath tests and will be null if not measured."
+	},
+	"query" :{
+	    "type" : "Long",
+	    "description" : "For a given ttl a tool may send multiple probes. This distinguishes between probes with the same ttl."
+	},
+	"rtt" : {
+	    "type" : "String",
+	    "description" : "The round trip time measured by the probe in milliseconds."
+	},
+	"success" : {
+	    "type" : "Boolean",
+	    "description" : "A boolean indicating if the probe succeeded. If it did not, then further details can be found in error_message."
+	},
+	"ttl" : {
+	    "type" : "Long",
+	    "description" : "The time-to-live set in the IP headers of the probe. Traceroute and tracepath gradually increase this value to measure the path. The list will always be sorted by ttl."
+	}
+    },
+	"CURRENTSTABLE": "1",
+	"VERSION": {
+		"1": {
+			"DEFAULTACTION":"getArchiveLocationsByEvent",
+			"URI": {
+			    "getArchiveLocationsByEvent": {
+			     	"METHOD":"GET",
+			    	"DESCRIPTION":"List PacketTrace Locations By Event Type",
+			    	"ROLES":{
+				    "DEFAULT":["ROLE_ADMIN"],
+				    "BATCH":["ROLE_ADMIN"],
+				    "HOOK":["ROLE_ADMIN"]
+				},
+				"REQUEST": {
+				    "permitAll":["id"]
+				},
+				"RESPONSE": {
+					"permitAll":["id","inputSource","inputDestination"]
+				}
+			    },
+			    "listByPacketReport": {
+			     	"METHOD":"GET",
+			    	"DESCRIPTION":"List PacketLossRate By PacketReport",
+			    	"ROLES":{
+				    "DEFAULT":["ROLE_ADMIN"],
+				    "BATCH":["ROLE_ADMIN"],
+				    "HOOK":["ROLE_ADMIN"]
+				},
+			        "REQUEST": {
+			            "permitAll":["id"]
+			        },
+			        "RESPONSE": {
+			        	"permitAll":["rtt","ttl"]
+			        }
+			    }
+			}
+		}
+	}
+}

@@ -1,0 +1,146 @@
+package net.nosegrind.apiframework
+
+import org.springframework.dao.DataIntegrityViolationException
+import net.nosegrind.apitoolkit.*
+import net.nosegrind.apiframework.iostate.HookService
+class HookController {
+
+	def springSecurityService
+	
+	static defaultAction = 'list'
+
+
+	def list() {
+		if(!springSecurityService.isLoggedIn()){
+			redirect(uri: "${grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl}")
+		}
+
+		def webhookList = isSuperuser() ? Hook.list(params) : Hook.findAllByUser(user, [max:params.max, sort:params.sort, order:params.order, offset:params.offset] )
+		params.max = Math.min(params.max ? params.int('max') : 10, 100)
+		return ['hook':webhookList]
+	}
+
+	def create() {
+		println("create hook called...")
+		if(!springSecurityService.isLoggedIn()){
+			println("not logged in")
+			redirect(uri: "${grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl}")
+		}
+		def user = loggedInUser()
+
+		def formats = ['JSON','XML']
+		Hook webhookInstance = Hook.findByUrlAndService(params.url,params.service)
+		if(webhookInstance){
+			println("URL EXISTS: PLEASE CHECK YOUR REGISTERED WEBHOOKS TO MAKE SURE THIS IS NOT A DUPLICATE.")
+			render(status: 400,text:"URL EXISTS: PLEASE CHECK YOUR REGISTERED WEBHOOKS TO MAKE SURE THIS IS NOT A DUPLICATE.")
+		}
+
+		if(!HookService.validateUrl(params.url)){
+			println("BAD PROTOCOL: URL MUST BE FULLY QUALIFIED DOMAIN NAME (OR IP ADDRESS) FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN.")
+			render(status: 400,text:"BAD PROTOCOL: URL MUST BE FULLY QUALIFIED DOMAIN NAME (OR IP ADDRESS) FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN.")
+		}
+
+		webhookInstance = new Hook(params)
+		webhookInstance.user=user
+
+		if (webhookInstance.save(flush: true)) {
+			println("saved")
+			redirect(action:"show", id: webhookInstance.id)
+		}else{
+			webhook.errors.each(){ println it }
+		}
+
+		render(status: 400,text:"INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
+	}
+
+	def edit() {
+		if(!springSecurityService.isLoggedIn()){
+			redirect(uri: "${grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl}")
+		}
+		return ['hook': Hook.get(params.id)]
+	}
+
+	def update() {
+		def user = loggedInUser()
+		if(!user){
+			redirect(uri: "${grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl}")
+			return
+		}
+
+		Hook webhookInstance = Hook.findByIdAndPerson(params.id, user)
+		if(!webhookInstance){
+			render(status: 400,text:"WEBHOOK NOT FOUND: NO WEBHOOK WITH THAT ID FOUND BELONGING TO CURRENT USER.")
+		}
+
+		webhookInstance.url = params.url
+		webhookInstance.format = params.format
+		webhookInstance.service = params.service
+
+		if (webhookInstance.save(flush: true)) {
+			redirect(action:"show", id: webhookInstance.id)
+		}
+
+		render(status: 400,text:"INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
+	}
+
+	def show() {
+		def user = loggedInUser()
+		if(!user){
+			redirect(uri: "${grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl}")
+		}
+
+		def webhookInstance = isSuperuser() ? Hook.get(params.id) : Hook.findByPersonAndId(user,params.id.toLong())
+
+		if (webhookInstance) {
+			redirect(action:"show", id: webhookInstance.id)
+		}
+
+		redirect(action: "list")
+	}
+
+	def delete() {
+		def user = loggedInUser()
+		if(!user){
+			redirect(uri: "${grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl}")
+		}
+
+		def webhookInstance = isSuperuser() ? Hook.get(params.id) : Hook.findByPersonAndId(user,params.id.toLong())
+
+		if (!webhookInstance) {
+			redirect(action: "list")
+		}
+
+		try {
+			webhookInstance.delete(flush: true)
+			redirect(action: "list")
+		}catch (DataIntegrityViolationException e) {
+			redirect(action: "show", id: params.id)
+		}
+	}
+
+	def reset() {
+		def user = loggedInUser()
+		if(!user){
+			redirect(uri: "${grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl}")
+		}
+
+		Hook webhookInstance = Hook.findByIdAndUser(params.id, user)
+		if(!webhookInstance){
+			render(status: 400,text:"WEBHOOK NOT FOUND: NO WEBHOOK WITH THAT ID FOUND BELONGING TO CURRENT USER.")
+		}
+
+		webhookInstance.attempts = 0
+
+		if (webhookInstance.save(flush: true)) {
+			redirect(action:"list")
+		}
+	}
+
+	protected loggedInUser() {
+		springSecurityService.isLoggedIn() ? Person.load(springSecurityService.principal.id) : null
+	}
+
+	protected boolean isSuperuser() {
+		springSecurityService.principal.authorities*.authority.any { grailsApplication.config.apitoolkit.admin.roles.contains(it) }
+	}
+}

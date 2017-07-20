@@ -1,0 +1,56 @@
+package net.nosegrind.apiframework
+
+import grails.test.mixin.integration.Integration
+import grails.transaction.*
+import groovyx.net.http.HTTPBuilder
+import static groovyx.net.http.Method.GET
+import spock.lang.*
+import geb.spock.*
+import grails.util.Holders
+import static groovyx.net.http.ContentType.*
+import static groovyx.net.http.Method.*
+import groovy.json.JsonSlurper
+
+/**
+ * See http://www.gebish.org/manual/current/ for more instructions
+ */
+@Integration
+//@Rollback
+class TestFunctionalSpec extends Specification {
+
+    @Shared String token
+
+
+    void "login and get token"(){
+        setup:"logging in"
+            String login = Holders.grailsApplication.config.root.login
+            String password = Holders.grailsApplication.config.root.password
+            String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"admin\",\"password\":\"Al1c3Inj@1L\"}' http://localhost:8080/api/login"
+            def proc = ['bash','-c',url].execute();
+            proc.waitFor()
+            def info = new JsonSlurper().parseText(proc.text)
+
+        when:"set token"
+            this.token = info.access_token
+
+        then:"has bearer token"
+            assert info.token_type == 'Bearer'
+    }
+
+    void "GET api call"() {
+        setup:"api is called"
+            String id = Holders.grailsApplication.config.root.id
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","GET","http://localhost:8080/v0.1/test/getPerson/${id}"].execute();
+            //proc.waitFor()
+            def outputStream = new StringBuffer()
+            proc.waitForProcessOutput(outputStream, System.err)
+            String output = outputStream.toString()
+            def info = new JsonSlurper().parseText(output)
+
+        when:"info is not null"
+            assert info!=null
+        then:"same user as logged in"
+            assert info.username == Holders.grailsApplication.config.root.login
+    }
+}
+
