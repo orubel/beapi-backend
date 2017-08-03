@@ -8,9 +8,9 @@ class ApplicationController {
 	def springSecurityService
 
 	def list() {
-		Account acct = Account.get(params?.id?.toLong())
+		Account acct = Account.get(params?.acct?.toLong())
 		if (acct) {
-			def result = Application.getAllByAcct(acct)
+			def result = Application.findAllByAcct(acct)
 			return [application: result]
 		}
 	}
