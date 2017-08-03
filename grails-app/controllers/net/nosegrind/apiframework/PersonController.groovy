@@ -19,7 +19,7 @@ class PersonController {
 		return [person:user]
 	}
 
-    def get(){
+    def show(){
 		try{
 			Person user
 			if(isSuperuser()) {
@@ -36,6 +36,16 @@ class PersonController {
 		}
     }
 
+	def getByUsername(){
+		try{
+			Person user
+			user = Person.get(params?.username)
+			return [person: user]
+		}catch(Exception e){
+			println("#[PersonController : get] : Exception - full stack trace follows:"+e)
+			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
+		}
+	}
 
 
 	def delete() {

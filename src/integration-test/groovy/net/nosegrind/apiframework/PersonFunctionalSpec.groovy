@@ -95,7 +95,8 @@ class PersonFunctionalSpec extends Specification {
 
             Integer version = cache['cacheversion']
 
-            String action = 'get'
+            String action = 'show'
+
             String pkey = cache?."${version}"?."${action}".pkey[0]
 
             def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/v0.1/${this.controller}/${action}/${this.currentId}"].execute();
@@ -107,8 +108,6 @@ class PersonFunctionalSpec extends Specification {
             slurper.parseText(output).each(){ k,v ->
                 info[k] = v
             }
-
-
 
         when:"info is not null"
             assert info!=[:]

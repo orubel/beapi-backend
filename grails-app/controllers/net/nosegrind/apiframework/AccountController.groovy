@@ -8,22 +8,23 @@ class AccountController {
 
 	def create(){
 		try{
-
 			Account.withTransaction { status ->
 				Account acct = new Account(acctName: "${params.acctName}", enabled: true)
 				if (!acct.save(flush: true, failOnError: true)) {
-					acct.errors.allErrors.each { log.error it }
-				}
-
-				if (acct.active) {
-					AcctPerson acctPerson = new AcctPerson(acct: acct, person: springSecurityService.principal.id, owner: true)
-					return [account: acct]
-				} else {
 					status.setRollbackOnly()
+				}else{
+					AcctPerson.withTransaction { status2 ->
+						AcctPerson acctPerson = new AcctPerson(acct: acct, person: springSecurityService.principal.id, owner: true)
+						if(!acctPerson.save(flush: true, failOnError: true)){
+							status2.setRollbackOnly()
+						}else{
+							return [account: acct]
+						}
+					}
 				}
-
 			}
 		}catch(Exception e){
+			println("[AccountController : get] : Exception - full stack trace follows:"+e)
 			throw new Exception("[AccountController : get] : Exception - full stack trace follows:",e)
 		}
 	}
