@@ -1,10 +1,13 @@
 package net.nosegrind.apiframework
 
+import grails.plugin.springsecurity.rest.token.AccessToken
+import grails.plugin.springsecurity.rest.token.generation.TokenGenerator
+import org.springframework.security.core.userdetails.UserDetails
 
 class AcctPersonController {
 	
 	def springSecurityService
-
+	TokenGenerator tokenGenerator
 
 	def list(){
 		println("#### acctperson::list called")
@@ -38,12 +41,20 @@ class AcctPersonController {
 	def show(){
 		try {
 			// double check against person
-			AcctPerson acct = AcctPerson.get(params?.id?.toLong())
-			if (acct.person.id == springSecurityService.principal.id || isSuperuser()) {
-				return [account: acct]
+			AcctPerson acctPerson
+			Account acct
+			Person person
+
+			if(params?.id) {
+				acctPerson = AcctPerson.get(params?.id?.toLong())
 			}else{
-				render( status: 400, text: "ILLEGAL ATTEMPTED ACCESS")
+				acct = Account.get(params.acct.toLong())
+				person = Person.get(springSecurityService.principal.id)
+				acctPerson = AcctPerson.findByAcctAndPerson(acct,person)
 			}
+
+			return [account: acctPerson]
+
 		}catch(Exception e){
 			throw new Exception("[AccountController : get] : Exception - full stack trace follows:",e)
 		}
@@ -69,6 +80,31 @@ class AcctPersonController {
 					status.setRollbackOnly()
 				}
 			}
+		}catch(Exception e){
+			throw new Exception("[AccountController : get] : Exception - full stack trace follows:",e)
+		}
+	}
+
+	def resetToken(){
+		try {
+			// double check against person
+			AcctPerson acctPerson
+			Account acct
+			Person person
+			String token = ""
+			if(params?.id) {
+				acctPerson = AcctPerson.get(params?.id?.toLong())
+			}else{
+				acct = Account.get(params.acct.toLong())
+				person = Person.get(springSecurityService.principal.id)
+				acctPerson = AcctPerson.findByAcctAndPerson(acct,person)
+				if(acctPerson.owner==true){
+					token = createToken()
+				}
+			}
+
+			return [account: token]
+
 		}catch(Exception e){
 			throw new Exception("[AccountController : get] : Exception - full stack trace follows:",e)
 		}
@@ -100,4 +136,10 @@ class AcctPersonController {
 		springSecurityService.principal.authorities*.authority.any { grailsApplication.config.apitoolkit.admin.roles.contains(it) }
 	}
 
+	private String createToken(){
+		UserDetails userDetails = springSecurityService.principal as UserDetails
+		AccessToken accessToken = tokenGenerator.generateAccessToken(userDetails)
+		//tokenStorageService.storeToken(accessToken.accessToken, userDetails)
+		return accessToken.accessToken
+	}
 }

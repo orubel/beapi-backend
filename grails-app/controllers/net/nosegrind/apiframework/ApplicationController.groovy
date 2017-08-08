@@ -37,15 +37,14 @@ class ApplicationController {
 		}
 	}
 
-    def get(){
+    def show(){
 		try{
 			Application app = Application.get(params?.id?.toLong())
-
-			AcctPerson acctPerson = AcctPerson.getByPersonAnd(springSecurityService.principal.id, true)
-
-			return [application: app]
-
-
+			Person person = Person.get(springSecurityService.principal.id)
+			AcctPerson acctPerson = AcctPerson.findByAcctAndPerson(app.acct,person)
+			if(acctPerson) {
+				return [application: app]
+			}
 		}catch(Exception e){
 			println("#[PersonController : get] : Exception - full stack trace follows:"+e)
 			throw new Exception("[ApplicationController : get] : Exception - full stack trace follows:",e)

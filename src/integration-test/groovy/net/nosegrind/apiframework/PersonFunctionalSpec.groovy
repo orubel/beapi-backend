@@ -99,21 +99,23 @@ class PersonFunctionalSpec extends Specification {
 
             String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/v0.1/${this.controller}/${action}/${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/v0.1/${this.controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
+
             def slurper = new JsonSlurper()
             slurper.parseText(output).each(){ k,v ->
                 info[k] = v
             }
-
+            println(info)
         when:"info is not null"
             assert info!=[:]
         then:"get user"
             cache?."${version}"?."${action}".returns.each(){ k,v ->
                 v.each(){ it ->
+                    println(it.name)
                     assert info."${it.name}" != null
                 }
             }
@@ -147,7 +149,6 @@ class PersonFunctionalSpec extends Specification {
                 v.each(){ it ->
                     if(it.keyType=='PRIMARY'){
                         id = info."${it.name}"
-                        println(id)
                     }
 
                 }

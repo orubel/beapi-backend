@@ -31,7 +31,6 @@ class PersonController {
 			}
 
 		}catch(Exception e){
-			println("#[PersonController : get] : Exception - full stack trace follows:"+e)
 			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
 		}
     }
@@ -42,7 +41,6 @@ class PersonController {
 			user = Person.get(params?.username)
 			return [person: user]
 		}catch(Exception e){
-			println("#[PersonController : get] : Exception - full stack trace follows:"+e)
 			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
 		}
 	}
@@ -52,9 +50,7 @@ class PersonController {
 		try {
 			Person person
 			if(isSuperuser()) {
-				println("#### SUPERUSER : "+params?.id+"#####")
 				person = Person.get(params?.id?.toLong())
-				println(person.username)
 			}else{
 				person = Person.get(springSecurityService.principal.id)
 			}
