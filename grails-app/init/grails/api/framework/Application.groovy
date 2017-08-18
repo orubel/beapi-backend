@@ -53,6 +53,7 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
             throw new IllegalStateException("Failed setting up Connector", ex)
         }
     }
+
 }
 
 trait ExternalConfig implements EnvironmentAware {
@@ -77,7 +78,7 @@ trait ExternalConfig implements EnvironmentAware {
                 finalLocation = environment.resolvePlaceholders(finalLocation)
 
                 Resource resource = defaultResourceLoader.getResource(finalLocation) as Resource
-                println(resource.getDescription())
+
                 if(resource.exists()) {
                     if (finalLocation.endsWith('.groovy')) {
                         String configText = resource.inputStream.getText(encoding)

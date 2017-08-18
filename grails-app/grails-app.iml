@@ -7,7 +7,6 @@
       <sourceFolder url="file://$MODULE_DIR$/controllers" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/domain" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/init" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/jobs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/services" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />

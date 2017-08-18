@@ -76,11 +76,11 @@ dependencies {
         exclude(module:'grails-plugin-gsp')
     }
 
-    compile('org.grails:grails-web') {
-        exclude(module: 'org.grails:grails-web-jsp')
-        exclude(module: 'org.grails:grails-web-sitemesh')
-        exclude(module:'org.grails:grails-web-gsp')
-    }
+    //compile('org.grails:grails-web') {
+    //    exclude(module: 'org.grails:grails-web-jsp')
+    //    exclude(module: 'org.grails:grails-web-sitemesh')
+    //    exclude(module:'org.grails:grails-web-gsp')
+    //}
 
     provided 'org.grails.plugins:hibernate:4.3.10.6'
     provided "org.hibernate:hibernate-ehcache"
