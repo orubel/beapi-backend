@@ -72,10 +72,7 @@ mkdir ~/.beapi/.iostate
 ```
 sudo /etc/init.d/beapi_backend start
 ```
-3. Run the 'ApiParse.groovy' script to initialize your database:
-```
-./ApiParse.groovy
-```
+
 
 **NOTE** : Will add an 'init.d' script in the future so it can be run as daemon. This will be added to 'INSTALLATION' instructions
 
