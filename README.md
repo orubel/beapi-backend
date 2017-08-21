@@ -3,12 +3,16 @@
 ## PRE-INSTALLATION
 1. Login to mysql as 'root' and create database
 ```
-create database scheduler;
+create database beapi;
 ```
 2. While in mysql shell, create user and grant privileges using login/password you just created:
 ```
-GRANT ALL PRIVILEGES ON scheduler.* to <login>@'localhost' IDENTIFIED BY '<password>';
-GRANT ALL PRIVILEGES ON scheduler.* to <login>@'%' IDENTIFIED BY '<password>';
+GRANT ALL PRIVILEGES ON beapi.* to <login>@'localhost' IDENTIFIED BY '<password>';
+
+```
+...or if database isn't local...
+```
+GRANT ALL PRIVILEGES ON beapi.* to <login>@'your.server.ip.address' IDENTIFIED BY '<password>';
 flush privileges;
 ```
 
@@ -24,7 +28,7 @@ flush privileges;
             dialect: 'org.hibernate.dialect.MySQL5Dialect'
             username: "changeMe"
             password: "changeMe"
-            url: "jdbc:mysql://localhost/scheduler"
+            url: "jdbc:mysql://localhost/beapi"
             dbCreate: update
 ```
 5. Create a self signed SSL key and store it in '/home/{your home dir}/.keys/keystore.jks' (https://www.sslshopper.com/article-how-to-create-a-self-signed-certificate-using-java-keytool.html)
@@ -48,9 +52,10 @@ flush privileges;
 8. Now create two directories in the directory of the user that will be running the script (NOTE: if you are running this from 'beapi_backend', these are created in 'root'):
 ```
 mkdir ~/.beapi
-mkdir ~/.iostate
+cd ~/.beapi
+mkdir ~/.beapi/.iostate
 ```
-9. Now move all files from 'grails-app/conf/iostate' into '~/.iostate'
+9. Now move all files from 'grails-app/conf/iostate' into '~/.beapi/.iostate'
 10 Move 'grails-app/conf/beapi.*' into '~/.beapi'
 
 ## BUILD
