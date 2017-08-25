@@ -14,7 +14,7 @@ buildscript {
         //maven { url "${System.getProperty('user.home')}/.m2/repository" }
     }
     dependencies {
-        //classpath group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1'
+        classpath group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1'
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath 'org.grails.plugins:api-framework:0.9'
         classpath "org.grails.plugins:hibernate5:${gormVersion-".RELEASE"}"
@@ -66,9 +66,11 @@ test {
 }
 
 dependencies {
-    compile "org.grails:grails-core"
-    compile "org.grails:grails-web-boot"
-    provided "org.grails.plugins:cache"
+    compile 'org.grails.plugins:api-framework:0.9'
+
+    //compile "org.grails:grails-core"
+    //compile "org.grails:grails-web-boot"
+    provided 'org.grails.plugins:cache:4.0.0'
     provided "org.grails.plugins:async"
     compile "org.grails.plugins:events"
 
@@ -76,10 +78,10 @@ dependencies {
     profile "org.grails.profiles:web"
     runtime "org.apache.tomcat:tomcat-jdbc"
 
-
-
-
-    compile 'org.grails.plugins:api-framework:0.9'
+    provided 'org.codehaus.gpars:gpars:1.2.1', {
+        exclude group:'org.multiverse', module:'multiverse-core'
+        exclude group:'org.codehaus.groovy', module: 'groovy-all'
+    }
 
     compile "org.grails:grails-logging"
     //compile "org.grails:grails-plugin-rest"
