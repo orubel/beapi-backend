@@ -20,12 +20,10 @@ class PersonController {
 	}
 
     def show(){
-		println("person>show")
 		try{
 			Person user
 			if(isSuperuser()) {
 				user = Person.get(params?.id?.toLong())
-				println(user)
 				return [person: user]
 			}else{
 				user = Person.get(springSecurityService.principal.id)
