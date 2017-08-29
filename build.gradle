@@ -127,6 +127,9 @@ dependencies {
 
     provided('org.grails.plugins:spring-security-core:3.2.0.M1')
     provided('org.grails.plugins:spring-security-rest:2.0.0.M2')
+    compile('org.grails.plugins:spring-security-rest-gorm:2.0.0.M2'){
+        exclude module: 'org.grails.plugins:spring-security-rest:2.0.0.M2'
+    }
 
     provided 'org.grails.plugins:converters:3.3.1'
     compile "org.grails.plugins:async"
