@@ -1,5 +1,15 @@
 package net.nosegrind.apiframework
 
+
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import grails.plugin.springsecurity.SpringSecurityService
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.CompileDynamic
+import org.springframework.beans.factory.annotation.Autowired
+import grails.util.Holders
+import org.springframework.context.ApplicationContext
+
 class Person implements Serializable{
 
 
@@ -8,7 +18,8 @@ class Person implements Serializable{
 	transient hasBeforeInsert = false
 	transient hasBeforeValidate = false
 	transient hasBeforeUpdate = false
-	transient springSecurityService
+
+	SpringSecurityService springSecurityService
 
 	String username
 	String password
@@ -27,7 +38,7 @@ class Person implements Serializable{
 		this.username = username
 		this.password = password
 	}
-	*/
+*/
 
 
 	@Override
@@ -45,14 +56,20 @@ class Person implements Serializable{
 		username
 	}
 
+	/*
 	Set<Role> getAuthorities() {
 		PersonRole.findAllByPerson(this)*.role
+	}
+*/
+
+	Set<Role> getAuthorities() {
+		(PersonRole.findAllByPerson(this) as List<PersonRole>)*.role as Set<Role>
 	}
 
 	def beforeInsert() {
 		if (!hasBeforeInsert) {
 			hasBeforeInsert = true
-			encodePassword()
+			encPassword()
 		}
 	}
 
@@ -64,7 +81,7 @@ class Person implements Serializable{
 		if (!hasBeforeUpdate) {
 			if (isDirty('password')) {
 				hasBeforeUpdate = true
-				encodePassword()
+				encPassword()
 			}
 		}
 	}
@@ -73,15 +90,22 @@ class Person implements Serializable{
 		hasBeforeUpdate = false
 	}
 
-	protected void encodePassword() {
+
+	protected void encPassword() {
+		ApplicationContext ctx = Holders.grailsApplication.mainContext
+		def springSecurityService = ctx.getBean("springSecurityService")
+		if (springSecurityService == null){
+			println "springSecurityService is null"
+		}
 		password = springSecurityService.encodePassword(password)
 	}
 
-	/*
+
+/*
 	protected void encodePassword() {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
 	}
-	*/
+*/
 
 	static constraints = {
 		username blank: false, unique: true

@@ -50,18 +50,14 @@ grails.plugin.springsecurity.failureHandler.ajaxAuthFailUrl = '/login/ajaxDenied
 //grails.plugin.reveng.manyToManyBelongsTos = 'none'
 
 grails.plugin.springsecurity.filterChain.chainMap = [
-		[pattern: '/api/**', filters: 'corsSecurityFilter,restAuthenticationFilter'],
-		// multitenant chains
 		[pattern: "${entryPoint}/**",filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
+		[pattern: '/api/login', filters: 'corsSecurityFilter,restAuthenticationFilter'],
+		[pattern: '/api/logout', filters: 'corsSecurityFilter,restAuthenticationFilter'],
+		// multitenant chains
 		[pattern: "${batchEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 		[pattern: "${chainEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 		[pattern: "${metricsEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 ]
-
-quartz {
-	autoStartup = true
-	jdbcStore = false
-}
 
 
 grails.plugin.springsecurity.interceptUrlMap = [
@@ -79,16 +75,14 @@ grails.plugin.springsecurity.interceptUrlMap = [
         [pattern:'/assets/**',          access:['permitAll']],
         [pattern:'/auth',               access:['permitAll']],
         [pattern:'/auth/**',            access:['permitAll']],
-        [pattern:'/login',              access:["permitAll"]],
-        [pattern:'/login/**',           access:["permitAll"]],
-        [pattern:'/logout',             access:["permitAll"]],
-        [pattern:'/logout/**',          access:["permitAll"]],
     [pattern: '/**', access: ['denyAll'], httpMethod: 'GET'],
     [pattern: '/**', access: ['denyAll'], httpMethod: 'POST'],
     [pattern: '/**', access: ['denyAll'], httpMethod: 'PUT'],
     [pattern: '/**', access: ['denyAll'], httpMethod: 'DELETE']
 ]
 
+
+grails.plugin.springsecurity.rest.token.validation.enableAnonymousAccess=true
 grails.plugin.springsecurity.rest.login.active  = true
 grails.plugin.springsecurity.rest.login.endpointUrl = '/api/login'
 grails.plugin.springsecurity.rest.logout.endpointUrl = '/api/logout'
@@ -99,7 +93,6 @@ grails.plugin.springsecurity.rest.login.usernamePropertyName =  'username'
 grails.plugin.springsecurity.rest.login.passwordPropertyName =  'password'
 
 server.useForwardHeaders = false
-
 
 grails.plugin.springsecurity.rest.token.generation.useSecureRandom  = true
 grails.plugin.springsecurity.rest.token.generation.useUUID  = false
@@ -112,10 +105,10 @@ grails.plugin.springsecurity.rest.token.storage.gorm.usernamePropertyName   = 'u
 grails.plugin.springsecurity.rest.token.rendering.usernamePropertyName  = 'username'
 grails.plugin.springsecurity.rest.token.rendering.authoritiesPropertyName = 'authorities'
 
-//grails.plugin.springsecurity.rest.token.validation.useBearerToken = false
-//grails.plugin.springsecurity.rest.token.validation.active   = true
-//grails.plugin.springsecurity.rest.token.validation.headerName   = 'X-Auth-Token'
-//grails.plugin.springsecurity.rest.token.validation.endpointUrl  = '/api/validate'
+grails.plugin.springsecurity.rest.token.validation.useBearerToken = false
+grails.plugin.springsecurity.rest.token.validation.active   = true
+grails.plugin.springsecurity.rest.token.validation.headerName   = 'X-Auth-Token'
+grails.plugin.springsecurity.rest.token.validation.endpointUrl  = '/api/validate'
 
 grails.plugin.springsecurity.rememberMe.alwaysRemember = true
 grails.plugin.springsecurity.rememberMe.persistent = false
@@ -124,7 +117,7 @@ grails.plugin.springsecurity.rememberMe.persistent = false
 // makes the application easier to work with
 grails.plugin.springsecurity.logout.postOnly = false
 
-grails.plugin.springsecurity.useSecurityEventListener = false
+grails.plugin.springsecurity.useSecurityEventListener = true
 
 
 // Added by the Reactive API Framework plugin:
@@ -144,20 +137,7 @@ apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
 apitoolkit.corsInterceptor.excludeEnvironments= ['production']
 apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
 
-auth {
-	google {
-		key = 'AIzaSyDnMuPve6n9UboQnja4VO7Yx2VTlZM36sE'
-		secret = ''
-	}
-	twitter {
-		key = ''
-		secret = ''
-	}
-	github {
-		key = ''
-		secret = ''
-	}
-}
+
 
 
 

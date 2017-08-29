@@ -12,8 +12,15 @@ class BootStrap {
 	def grailsApplication
 	//ApiObjectService apiObjectService
 	//ApiCacheService apiCacheService
+    def springSecurityService
 	
     def init = { servletContext ->
+        println("#### BOOTSTRAP ####")
+        if (springSecurityService == null){
+            println "springSecurityService is null"
+        }else{
+            println "springSecurityService EXISTS!!!"
+        }
         def apitoolkit = grailsApplication.config.apitoolkit
 
         apitoolkit.roles.each { it ->
@@ -32,10 +39,13 @@ class BootStrap {
             Role adminRole = Role.findByAuthority("ROLE_ADMIN")
 
             if(!user?.id){
+                println(grailsApplication.config.root.login)
+                println(grailsApplication.config.root.password)
+                println(grailsApplication.config.root.email)
                 user = new Person(username:"${grailsApplication.config.root.login}",password:"${grailsApplication.config.root.password}",email:"${grailsApplication.config.root.email}")
-                //user = new Person(username:"root",password:"password",email:"orubel@nosegrind.main.scripts.net")
-                if(!user.save(flush:true,failOnError:true)){
-                    user.errors.allErrors.each { log.error it }
+
+                if(!user.save(flush:true)){
+                    user.errors.allErrors.each { println it }
                 }
             }else{
                 if(!passwordEncoder.isPasswordValid(user.password, grailsApplication.config.root.password, null)){
@@ -51,16 +61,7 @@ class BootStrap {
             status.isCompleted()
         }
 
-        // Bootstrap tools
-        // run with 'create-update' first time, then change to 'update' and comment out.
-        //apiParseService.parseArchive('http://perf-scidmz-data.cac.washington.edu/esmond/perfsonar/archive/?format=json')
 
-		/*
-		def plugins = pluginMngr.getAllPlugins()
-		plugins.each{
-			println(it)
-		}
-		*/
 		//apiObjectService.initialize()
 		//def test = apiCacheService.getCacheNames()
 

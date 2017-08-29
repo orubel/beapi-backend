@@ -81,12 +81,13 @@ grails:
             -'-XX:MaxGCMinorPauseMillis=50'
             -'-server'
 hibernate:
+    flush:
+        mode: COMMIT
     cache:
         use_second_level_cache: true
         use_query_cache: true
         provider_class: 'org.hibernate.cache.EhCacheProvider'
-        region:
-            factory_class: 'org.hibernate.cache.ehcache.EhCacheRegionFactory'
+        region.factory_class: 'org.hibernate.cache.ehcache.EhCacheRegionFactory'
 
 quartz:
     autoStartup: true
