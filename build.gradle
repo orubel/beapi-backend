@@ -126,7 +126,7 @@ dependencies {
     provided("org.codehaus.groovy:groovy-ant:${groovyVersion}")
 
     provided('org.grails.plugins:spring-security-core:3.2.0.M1')
-    provided('org.grails.plugins:spring-security-rest:2.0.0.M2')
+    compile('org.grails.plugins:spring-security-rest:2.0.0.M2')
     compile('org.grails.plugins:spring-security-rest-gorm:2.0.0.M2'){
         exclude module: 'org.grails.plugins:spring-security-rest:2.0.0.M2'
     }

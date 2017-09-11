@@ -24,6 +24,8 @@ import org.grails.config.NavigableMapPropertySource
 import org.springframework.core.io.DefaultResourceLoader
 import groovy.util.ConfigSlurper
 
+import org.apache.coyote.http2.Http2Protocol
+
 @EnableAutoConfiguration(exclude = [SecurityFilterAutoConfiguration,JtaAutoConfiguration])
 class Application extends GrailsAutoConfiguration implements EnvironmentAware,ExternalConfig {
 
@@ -48,6 +50,7 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
             connector.setPort(8080)
             connector.setSecure(false)
             connector.setRedirectPort(8443)
+            //connector.addUpgradeProtocol(new Http2Protocol());
             return connector;
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed setting up Connector", ex)

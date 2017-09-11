@@ -15,12 +15,7 @@ class BootStrap {
     def springSecurityService
 	
     def init = { servletContext ->
-        println("#### BOOTSTRAP ####")
-        if (springSecurityService == null){
-            println "springSecurityService is null"
-        }else{
-            println "springSecurityService EXISTS!!!"
-        }
+
         def apitoolkit = grailsApplication.config.apitoolkit
 
         apitoolkit.roles.each { it ->
