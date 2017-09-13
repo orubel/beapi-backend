@@ -10,13 +10,12 @@ class AcctPersonController {
 	TokenGenerator tokenGenerator
 
 	def list(){
-		println("#### acctperson::list called")
 		try{
 			Person person
 			if(isSuperuser()){
-				if(params?.id?.toLong()){
+				if(params?.person_id?.toLong()){
 					// TODO : Future functionality
-					person = Person.get(params?.id?.toLong())
+					person = Person.get(params?.person_id?.toLong())
 				}else{
 					person = Person.get(springSecurityService.principal.id)
 				}
@@ -28,10 +27,9 @@ class AcctPersonController {
 			List accts = []
 
 			acct.each(){
-				LinkedHashMap temp = [acct:it.acct.id,acctName:it.acct.acctName]
-				accts.add(temp)
+				//LinkedHashMap temp = [id:acct.id.toString(),version:acct.version.toString(),acctId:acct.acct.id.toString(),personId:acct.person.id.toString(),owner:acct.owner.toString()]
+				accts.add(acct)
 			}
-			println(accts)
 			return [account: accts]
 		}catch(Exception e){
 			throw new Exception("[AccountController : get] : Exception - full stack trace follows:",e)
@@ -63,12 +61,12 @@ class AcctPersonController {
 	def create(){
 		try{
 			Account.withTransaction { status ->
-				Account acct = Account.get(params.acct.toLong())
+				Account acct = Account.get(params.acct_id.toLong())
 				if (acct == null) {
 					render(status: 400, text: "NO ACCOUNT BY THAT ID EXISTS")
 				}
 
-				Person person = Person.get(params.person.toLong())
+				Person person = Person.get(params.person_id.toLong())
 				if (person == null) {
 					render(status: 400, text: "NO PERSON BY THAT USERNAME EXISTS")
 				}
@@ -85,6 +83,7 @@ class AcctPersonController {
 		}
 	}
 
+	/*
 	def resetToken(){
 		try {
 			// double check against person
@@ -109,7 +108,7 @@ class AcctPersonController {
 			throw new Exception("[AccountController : get] : Exception - full stack trace follows:",e)
 		}
 	}
-
+*/
 
 	def delete() {
 		try {
