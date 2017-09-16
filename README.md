@@ -43,7 +43,7 @@ flush privileges;
             url: "jdbc:mysql://localhost/<yourdatabase>"
             dbCreate: update
 ```
-NOTE: Use the JDBC Driver and dialect for whatever database you want; this is merely an example for MySQL. To change the database, go into the 'build.gradle' file in 'root' and cediting it (http://docs.grails.org/latest/guide/conf.html#dataSource)
+NOTE: Use the JDBC Driver and dialect for whatever database you want; this is merely an example for MySQL. To change the database, go into the 'build.gradle' file in 'root' and editing it (http://docs.grails.org/latest/guide/conf.html#dataSource)
 
 
 5. Create a self signed SSL key and store it in '/home/{your home dir}/.keys/keystore.jks' (https://www.sslshopper.com/article-how-to-create-a-self-signed-certificate-using-java-keytool.html)
