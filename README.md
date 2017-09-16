@@ -1,20 +1,32 @@
-
+Project relies on Java 1.8.
+Please make sure to have this pre-installed on your system.
 
 ## PRE-INSTALLATION
-1. Login to mysql as 'root' and create database
+1. Project requires Java 1.8. Test your version from a shell/command prompt by typing:
+``` java -version```
+
+2. Install Grails 3.3.X
+ *  http://docs.grails.org/latest/guide/gettingStarted.html#downloadingAndInstalling
+ 
+3. Login to mysql as 'root' and create database
 ```
-create database beapi;
+create database <yourdatabase>;
 ```
-2. While in mysql shell, create user and grant privileges using login/password you just created:
+4. While in mysql shell, create user and grant privileges using login/password you just created:
 ```
 GRANT ALL PRIVILEGES ON beapi.* to <login>@'localhost' IDENTIFIED BY '<password>';
 
 ```
 ...or if database isn't local...
 ```
-GRANT ALL PRIVILEGES ON beapi.* to <login>@'your.server.ip.address' IDENTIFIED BY '<password>';
+GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'your.server.ip.address' IDENTIFIED BY '<password>';
 flush privileges;
 ```
+5. Clone the BeAPI Plugin locally and do a build
+``` git clone https://github.com/orubel/Beapi-API-Framework.git```
+
+6. Build Beapi Plugin
+```grails clean;grails install```
 
 ## INSTALLATION (this can all be an install script in future)
 1. create 'BEAPI' user (with home dir) for server (do not run as root) // todo
@@ -28,9 +40,11 @@ flush privileges;
             dialect: 'org.hibernate.dialect.MySQL5Dialect'
             username: "changeMe"
             password: "changeMe"
-            url: "jdbc:mysql://localhost/beapi"
+            url: "jdbc:mysql://localhost/<yourdatabase>"
             dbCreate: update
 ```
+NOTE: Use the JDBC Driver and dialect for whatever database you want; this is merely an example for MySQL
+
 5. Create a self signed SSL key and store it in '/home/{your home dir}/.keys/keystore.jks' (https://www.sslshopper.com/article-how-to-create-a-self-signed-certificate-using-java-keytool.html)
 6. Edit /grails-app/conf/beapi.yml and change the default ssl config:
 ```
