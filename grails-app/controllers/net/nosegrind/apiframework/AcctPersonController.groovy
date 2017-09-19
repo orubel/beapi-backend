@@ -3,15 +3,18 @@ package net.nosegrind.apiframework
 import grails.plugin.springsecurity.rest.token.AccessToken
 import grails.plugin.springsecurity.rest.token.generation.TokenGenerator
 import org.springframework.security.core.userdetails.UserDetails
+import org.hibernate.FetchMode
 
 class AcctPersonController {
 	
 	def springSecurityService
 	TokenGenerator tokenGenerator
 
+	// in an example like this with multiple keys, they need to be set as 'eager fetched' in domain object
 	def list(){
 		try{
 			Person person
+
 			if(isSuperuser()){
 				if(params?.person_id?.toLong()){
 					// TODO : Future functionality
@@ -22,13 +25,22 @@ class AcctPersonController {
 			}else{
 				person = Person.get(springSecurityService.principal.id)
 			}
-			AcctPerson[] acct = AcctPerson.findByPerson(person)
 
-			List accts = []
+			def account =  AcctPerson.withCriteria() {
+				eq("person", person)
+				fetchMode 'levelOne', FetchMode.EAGER
+			}
 
-			acct.each(){
+
+
+
+
+			List<AcctPerson> accts = []
+
+			//AcctPerson[] account = AcctPerson.findAllByPerson(person)
+			account.each(){
 				//LinkedHashMap temp = [id:acct.id.toString(),version:acct.version.toString(),acctId:acct.acct.id.toString(),personId:acct.person.id.toString(),owner:acct.owner.toString()]
-				accts.add(acct)
+				accts.add(account)
 			}
 			return [account: accts]
 		}catch(Exception e){

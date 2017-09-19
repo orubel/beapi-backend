@@ -1,9 +1,10 @@
 package net.nosegrind.apiframework
 
 class AcctPerson implements Serializable {
+	static belongsTo = [acct:Account,person:Person]
 
-	Account acct
-	Person person
+	//Account account
+	//Person person
 	boolean owner=false
 
 	static constraints = {
@@ -21,6 +22,8 @@ class AcctPerson implements Serializable {
 
 	static mapping = {
 		cache true
+		acct lazy:false
+		person lazy:false
 	}
 
 }
