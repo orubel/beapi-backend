@@ -11,20 +11,24 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven { url "https://repo.grails.org/grails/core" }
-        //maven { url "${System.getProperty('user.home')}/.m2/repository" }
+
+        // for installing local
+        maven { url "${System.getProperty('user.home')}/.m2/repository" }
     }
     dependencies {
         classpath group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1'
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath 'org.grails.plugins:api-framework:0.9'
         classpath "org.grails.plugins:hibernate5:${gormVersion-".RELEASE"}"
-        //classpath 'com.bertramlabs.plugins:asset-pipeline-gradle:2.1.1'
+
+        // for installing local
+        classpath 'org.grails.plugins:api-framework:0.9.3'
     }
 }
 
+
 plugins {
-    //id "io.spring.dependency-management" version "0.4.0.RELEASE"
     id "io.spring.dependency-management" version "0.6.0.RELEASE"
+    //id "com.jfrog.bintray" version "1.7.3"
 }
 
 version "0.1"
@@ -32,6 +36,8 @@ group "@grails.app.group@"
 
 apply plugin: "org.springframework.boot"
 apply plugin: "org.grails.grails-web"
+
+
 //apply plugin: "org.grails.grails-gsp"
 
 sourceCompatibility = 1.8
@@ -44,7 +50,6 @@ ext {
 
 repositories {
     mavenLocal()
-    //maven { url 'https://dl.bintray.com/nosegrind/plugins' }
     maven { url "https://repo.grails.org/grails/core" }
     //maven { url "${System.getProperty('user.home')}/.m2/repository/" }
     //maven { url "http://maven.it.su.se/it.su.se/maven2/" }
@@ -65,13 +70,15 @@ test {
     systemProperties = System.properties
 }
 
-dependencies {
-    compile 'org.grails.plugins:api-framework:0.9'
 
-    //compile "org.grails:grails-core"
-    //compile "org.grails:grails-web-boot"
-    provided 'org.grails.plugins:cache:4.0.0'
-    provided "org.grails.plugins:async"
+
+dependencies {
+    compile 'org.grails.plugins:api-framework:0.9.3'
+
+    // compile "org.grails:grails-core"
+    // compile "org.grails:grails-web-boot"
+    compile 'org.grails.plugins:cache:4.0.0'
+    compile "org.grails.plugins:async"
     compile "org.grails.plugins:events"
 
     // test
@@ -102,11 +109,11 @@ dependencies {
     //    exclude(module:'grails-plugin-gsp')
     //}
 
-    //compile('org.grails:grails-web') {
-    //    exclude(module: 'org.grails:grails-web-jsp')
-    //    exclude(module: 'org.grails:grails-web-sitemesh')
-    //    exclude(module:'org.grails:grails-web-gsp')
-    //}
+    compile('org.grails:grails-web') {
+        exclude(module: 'org.grails:grails-web-jsp')
+        exclude(module: 'org.grails:grails-web-sitemesh')
+        exclude(module:'org.grails:grails-web-gsp')
+    }
 
     provided "org.grails.plugins:hibernate5"
     provided "org.hibernate:hibernate-core:5.1.5.Final"
@@ -138,7 +145,8 @@ dependencies {
     //compile 'org.grails.plugins:db-reverse-engineer:4.0.0'
 
     testCompile "org.grails.plugins:geb"
-    testCompile "org.grails:grails-plugin-testing"
+    //testCompile "org.grails:grails-plugin-testing"
+    testCompile "org.grails:grails-test-mixins:3.3.0"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
     //testCompile "org.grails:grails-datastore-rest-client:4.0.4.RELEASE"

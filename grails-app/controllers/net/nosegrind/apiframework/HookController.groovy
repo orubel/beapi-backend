@@ -7,7 +7,7 @@ import net.nosegrind.apiframework.HookService
 class HookController {
 
 	def springSecurityService
-	HookService hookService
+	def hookService
 
 	static defaultAction = 'list'
 
