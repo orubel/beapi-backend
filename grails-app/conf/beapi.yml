@@ -121,7 +121,7 @@ environments:
             dialect: 'org.hibernate.dialect.MySQL5Dialect'
             username: "perf"
             password: "Th3R&dP1ll"
-            url: "jdbc:mysql://localhost/scheduler"
+            url: "jdbc:mysql://localhost/beapi"
             dbCreate: update
             properties:
                    jmxEnabled: true
@@ -155,7 +155,7 @@ environments:
             dialect: 'org.hibernate.dialect.MySQL5Dialect'
             username: "perf"
             password: "Th3R&dP1ll"
-            url: "jdbc:mysql://localhost/scheduler"
+            url: "jdbc:mysql://localhost/beapi"
             dbCreate: update
     production:
         apiThrottle: true
@@ -171,7 +171,7 @@ environments:
             dialect: 'org.hibernate.dialect.MySQL5Dialect'
             username: "perf"
             password: "Th3R&dP1ll"
-            url: "jdbc:mysql://localhost/scheduler"
+            url: "jdbc:mysql://localhost/beapi"
             dbCreate: update
             properties:
                    jmxEnabled: true
@@ -227,7 +227,7 @@ apitoolkit:
 server:
     tomcat:
         backgroundProcessorDelay: 30
-        maxThreads: 250
+        maxThreads: 350
         uriEncoding: UTF-8
         compression: off
         compressableMimeTypes: application/json,text/json,application/xml,text/xml,text/plain
