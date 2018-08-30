@@ -27,22 +27,24 @@ class BootStrap {
             }
         }
 
+
         Person user = Person.findByUsername("${grailsApplication.config.root.login}")
-//Person user = Person.findByUsername("root")
+
 
         PersonRole.withTransaction(){ status ->
             Role adminRole = Role.findByAuthority("ROLE_ADMIN")
 
             if(!user?.id){
-                println(grailsApplication.config.root.login)
-                println(grailsApplication.config.root.password)
-                println(grailsApplication.config.root.email)
+                //println(grailsApplication.config.root.login)
+                //println(grailsApplication.config.root.password)
+                //println(grailsApplication.config.root.email)
                 user = new Person(username:"${grailsApplication.config.root.login}",password:"${grailsApplication.config.root.password}",email:"${grailsApplication.config.root.email}")
 
                 if(!user.save(flush:true)){
                     user.errors.allErrors.each { println it }
                 }
             }else{
+                // user exists
                 if(!passwordEncoder.isPasswordValid(user.password, grailsApplication.config.root.password, null)){
                     log.error "Error: Bootstrapped Root Password was changed in config. Please update"
                 }
@@ -51,6 +53,8 @@ class BootStrap {
             if(!user?.authorities?.contains(adminRole)){
                 PersonRole pRole = new PersonRole(user,adminRole)
                 pRole.save(flush:true,failOnError:true)
+            }else{
+                // role exists
             }
 
             status.isCompleted()

@@ -1,6 +1,6 @@
 package net.nosegrind.apiframework
 
-class PersonController {
+class PersonController{
 	
 	def springSecurityService
 
@@ -10,6 +10,8 @@ class PersonController {
 			return [person:result]
 		}
 	}
+
+	java.lang.String value(){}
 
 	def create(){
 		Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
