@@ -87,15 +87,5 @@ java -Dgrails.env=dev -jar build/libs/beapi-backend-0.1.jar -Xms1024m -Xmx2048m 
 ```
 
 
-### INITIALIZATION
-
-1. move 'beapi_backend' to '/etc/init.d/' directory and change 'PATH_TO_JAR' so it points to your application
-2. start the application by typing:
-```
-sudo /etc/init.d/beapi_backend start
-```
-
-
-**NOTE** : Will add an 'init.d' script in the future so it can be run as daemon. This will be added to 'INSTALLATION' instructions
 
 
