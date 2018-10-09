@@ -1,6 +1,3 @@
-Project relies on Java 1.8.
-Please make sure to have this pre-installed on your system.
-
 ## PRE-INSTALLATION
 1. Project requires Java 1.8. Test your version from a shell/command prompt by typing:
 ``` java -version```
@@ -15,15 +12,19 @@ create database <yourdatabase>;
 4. While in mysql shell, create user and grant privileges using login/password you just created:
 ```
 GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'localhost' IDENTIFIED BY '<password>';
-
+flush privileges;
 ```
 ...or if database isn't local...
 ```
 GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'your.server.ip.address' IDENTIFIED BY '<password>';
 flush privileges;
 ```
-5. Clone the BeAPI Plugin locally and do a build
-``` git clone https://github.com/orubel/Beapi-API-Framework.git```
+5. Clone the BeAPI Plugin locally and do a build.
+``` 
+git clone https://github.com/orubel/Beapi-API-Framework.git
+cd Beapi-API-Framework
+./gradlew clean;grails install
+```
 
 6. Build Beapi Plugin
 ```grails clean;grails install```
