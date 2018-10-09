@@ -14,7 +14,7 @@ create database <yourdatabase>;
 ```
 4. While in mysql shell, create user and grant privileges using login/password you just created:
 ```
-GRANT ALL PRIVILEGES ON beapi.* to <login>@'localhost' IDENTIFIED BY '<password>';
+GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'localhost' IDENTIFIED BY '<password>';
 
 ```
 ...or if database isn't local...
@@ -59,7 +59,7 @@ NOTE: Use the JDBC Driver and dialect for whatever database you want; this is me
 7. Edit /grails-app/conf/beapi.yml and change the iostate default directory in the different environments:
 ```
         iostate:
-            preloadDir: '/home/{your home dir}/.iostate'
+            preloadDir: '/home/{your home dir}/.beapi/.iostate'
             archInstanceUrls:
                 proxy: "127.0.0.1"
                 mq: "127.0.0.1"
@@ -77,6 +77,12 @@ mkdir ~/.beapi/.iostate
 1. From inside the project directory, type:
 ```
 ./gradlew --stop;./gradlew clean;./gradlew build
+```
+
+## RUN
+After you have built the Beapi Plugin and have built THIS implementing project, you can then typed the following command from within the directory structure of the project to run it:
+```
+java -Dgrails.env=dev -jar build/libs/beapi-backend-0.1.jar -Xms1024m -Xmx2048m -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=10 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:MaxGCPauseMillis=250 -XX:MaxGCMinorPauseMillis=100 -server
 ```
 
 
