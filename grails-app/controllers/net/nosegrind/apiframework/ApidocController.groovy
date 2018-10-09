@@ -11,8 +11,8 @@ class ApidocController {
 	def index(){
 		redirect(action:'show')
 	}
-	
-	def show(){
+
+	LinkedHashMap show(){
 		println("apidoc > show called")
 		Map docs = [:]
 		

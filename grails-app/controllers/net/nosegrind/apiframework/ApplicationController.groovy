@@ -7,7 +7,7 @@ class ApplicationController {
 	
 	def springSecurityService
 
-	def list() {
+	LinkedHashMap list() {
 		Account acct = Account.get(params?.acct?.toLong())
 		if (acct) {
 			def result = Application.findAllByAcct(acct)
@@ -15,7 +15,7 @@ class ApplicationController {
 		}
 	}
 
-	def create(){
+	LinkedHashMap create(){
 		AcctPerson acctPerson = AcctPerson.getByPersonAndOwner(springSecurityService.principal.id, true)
 		if(acctPerson) {
 			Application.withTransaction { status ->
@@ -37,7 +37,7 @@ class ApplicationController {
 		}
 	}
 
-    def show(){
+	LinkedHashMap show(){
 		try{
 			Application app = Application.get(params?.id?.toLong())
 			Person person = Person.get(springSecurityService.principal.id)
@@ -46,13 +46,13 @@ class ApplicationController {
 				return [application: app]
 			}
 		}catch(Exception e){
-			println("#[PersonController : get] : Exception - full stack trace follows:"+e)
+			//println("#[PersonController : get] : Exception - full stack trace follows:"+e)
 			throw new Exception("[ApplicationController : get] : Exception - full stack trace follows:",e)
 		}
     }
 
 
-	def delete() {
+	LinkedHashMap delete() {
 		try {
 			Application app
 			if(isSuperuser()) {

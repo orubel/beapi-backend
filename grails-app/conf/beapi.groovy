@@ -45,9 +45,6 @@ grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/login/ajaxSucce
 grails.plugin.springsecurity.failureHandler.defaultFailureUrl = '/login/ajaxDenied'
 grails.plugin.springsecurity.failureHandler.ajaxAuthFailUrl = '/login/ajaxDenied'
 
-// DBREVERSEENGINEER
-//grails.plugin.reveng.packageName = "io.beapi"
-//grails.plugin.reveng.manyToManyBelongsTos = 'none'
 
 grails.plugin.springsecurity.filterChain.chainMap = [
 		[pattern: '/api/**', filters: 'corsSecurityFilter,restAuthenticationFilter'],
@@ -123,7 +120,7 @@ grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.springsecurity.useSecurityEventListener = false
 
 
-// Added by the Reactive API Framework plugin:
+// Added by the BeAPI API Framework plugin:
 apitoolkit.attempts= 5
 apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
 apitoolkit.chaining.enabled= true

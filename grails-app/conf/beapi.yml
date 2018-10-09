@@ -110,19 +110,19 @@ environments:
     development:
         apiThrottle: false
         iostate:
-            preloadDir: '/home/owenrubel/.beapi/.iostate'
+            preloadDir: '.bottledwind/.iostate'
             archInstanceUrls:
                 proxy: "127.0.0.1"
                 mq: "127.0.0.1"
         dataSource:
             pooled: true
             jmxExport: true
-            driverClassName: "com.mysql.jdbc.Driver"
-            dialect: 'org.hibernate.dialect.MySQL5Dialect'
-            username: "perf"
-            password: "Th3R&dP1ll"
-            url: "jdbc:mysql://localhost/beapi"
-            dbCreate: update
+            driverClassName: "org.h2.Driver"
+            username: "sa"
+            password: ""
+            dbCreate: "create-drop"
+            url: "jdbc:h2:mem:bw"
+            # dbCreate: update
             properties:
                    jmxEnabled: true
                    initialSize: 5
@@ -141,57 +141,6 @@ environments:
                    testOnReturn: false
                    jdbcInterceptors: "ConnectionState"
                    defaultTransactionIsolation: 2 # "java.sql.Connection.TRANSACTION_READ_COMMITTED"
-    test:
-        apiThrottle: false
-        iostate:
-            preloadDir: '/home/owenrubel/.beapi/.iostate'
-            archInstanceUrls:
-                proxy: "127.0.0.1"
-                mq: "127.0.0.1"
-        dataSource:
-            pooled: true
-            jmxExport: true
-            driverClassName: "com.mysql.jdbc.Driver"
-            dialect: 'org.hibernate.dialect.MySQL5Dialect'
-            username: "perf"
-            password: "Th3R&dP1ll"
-            url: "jdbc:mysql://localhost/beapi"
-            dbCreate: update
-    production:
-        apiThrottle: true
-        iostate:
-            preloadDir: '/home/owenrubel/.beapi/.iostate'
-            archInstanceUrls:
-                proxy: "127.0.0.1"
-                mq: "127.0.0.1"
-        dataSource:
-            pooled: true
-            jmxExport: true
-            driverClassName: "com.mysql.jdbc.Driver"
-            dialect: 'org.hibernate.dialect.MySQL5Dialect'
-            username: "perf"
-            password: "Th3R&dP1ll"
-            url: "jdbc:mysql://localhost/beapi"
-            dbCreate: update
-            properties:
-                   jmxEnabled: true
-                   initialSize: 5
-                   maxActive: 50
-                   minIdle: 5
-                   maxIdle: 25
-                   maxWait: 10000
-                   maxAge: 600000
-                   timeBetweenEvictionRunsMillis: 5000
-                   minEvictableIdleTimeMillis: 60000
-                   validationQuery: "SELECT 1"
-                   validationQueryTimeout: 3
-                   validationInterval: 15000
-                   testOnBorrow: true
-                   testWhileIdle: true
-                   testOnReturn: false
-                   jdbcInterceptors: "ConnectionState"
-                   defaultTransactionIsolation: 2 # "java.sql.Connection.TRANSACTION_READ_COMMITTED"
-
 ---
 apitoolkit:
     apiName: api

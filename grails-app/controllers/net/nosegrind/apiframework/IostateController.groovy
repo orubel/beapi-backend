@@ -12,7 +12,7 @@ class IostateController {
 	/*
 	* list name of collections of iostate
 	*/
-	def list() {
+	LinkedHashMap list() {
 		if(isSuperuser()){
 			List temp = apiCacheService.getCacheNames()
 			List cacheNames = []
@@ -26,7 +26,7 @@ class IostateController {
 		}
 	}
 
-	def update() {
+	LinkedHashMap update() {
 		if(isSuperuser()){
 		    def file = request.getFile('iostate')
 		    

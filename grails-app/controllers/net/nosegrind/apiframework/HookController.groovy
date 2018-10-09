@@ -11,7 +11,7 @@ class HookController {
 
 	static defaultAction = 'list'
 
-	def list() {
+	LinkedHashMap list() {
 		println("hooklist called...")
 		def user = loggedInUser()
 		def webhookList = (isSuperuser()) ? Hook.list() : Hook.findAllByUser(user, [max:params.max, sort:params.sort, order:params.order, offset:params.offset] )
@@ -20,7 +20,7 @@ class HookController {
 		return ['hook':webhookList]
 	}
 
-	def create() {
+	LinkedHashMap create() {
 		def formats = ['JSON','XML']
 		Hook webhookInstance = Hook.findByUrlAndService(params.url,params.service)
 		if(webhookInstance){
@@ -41,7 +41,7 @@ class HookController {
 		render(status: 400,text:"INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
 	}
 
-	def update() {
+	LinkedHashMap update() {
 		def user = loggedInUser()
 
 		Hook webhookInstance = Hook.findByIdAndPerson(params.id, user)
@@ -60,13 +60,13 @@ class HookController {
 		render(status: 400,text:"INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
 	}
 
-	def show() {
+	LinkedHashMap show() {
 		def user = loggedInUser()
 		def webhookInstance = isSuperuser() ? Hook.get(params.id) : Hook.findByPersonAndId(user,params.id.toLong())
 		return [hook:webhookInstance]
 	}
 
-	def delete() {
+	LinkedHashMap delete() {
 		def user = loggedInUser()
 		def webhookInstance = isSuperuser() ? Hook.get(params.id) : Hook.findByPersonAndId(user,params.id.toLong())
 
@@ -82,7 +82,7 @@ class HookController {
 		}
 	}
 
-	def reset() {
+	LinkedHashMap reset() {
 		def user = loggedInUser()
 
 		Hook webhookInstance = Hook.findByIdAndUser(params.id, user)

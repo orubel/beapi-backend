@@ -4,7 +4,7 @@ class PersonController{
 	
 	def springSecurityService
 
-	def list() {
+	LinkedHashMap list() {
 		if(isSuperuser()){
 			def result = Person.list()
 			return [person:result]
@@ -13,7 +13,7 @@ class PersonController{
 
 	java.lang.String value(){}
 
-	def create(){
+	LinkedHashMap create(){
 		Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
 		if(!user.save(flush:true,failOnError:true)){
 			user.errors.allErrors.each { log.error it }
@@ -21,7 +21,7 @@ class PersonController{
 		return [person:user]
 	}
 
-    def show(){
+	LinkedHashMap show(){
 		try{
 			Person user
 			if(isSuperuser()) {
@@ -37,7 +37,7 @@ class PersonController{
 		}
     }
 
-	def getByUsername(){
+	LinkedHashMap getByUsername(){
 		try{
 			Person user
 			user = Person.get(params?.username)
@@ -48,7 +48,7 @@ class PersonController{
 	}
 
 
-	def delete() {
+	LinkedHashMap delete() {
 		try {
 			Person person
 			if(isSuperuser()) {

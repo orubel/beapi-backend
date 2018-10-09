@@ -6,7 +6,7 @@ class AccountController {
 	def springSecurityService
 
 
-	def create(){
+	LinkedHashMap create(){
 		try{
 			Account.withTransaction { status ->
 				Account acct = new Account(acctName: "${params.acctName}", enabled: true)
@@ -24,12 +24,11 @@ class AccountController {
 				}
 			}
 		}catch(Exception e){
-			println("[AccountController : get] : Exception - full stack trace follows:"+e)
 			throw new Exception("[AccountController : get] : Exception - full stack trace follows:",e)
 		}
 	}
 
-    def get(){
+	LinkedHashMap get(){
 		try{
 			Account acct = Account.get(params?.id?.toLong())
 			return [account: acct]
@@ -38,13 +37,13 @@ class AccountController {
 		}
     }
 
-	def delete() {
+	LinkedHashMap delete() {
 		try {
 			Account acct = Account.get(params.id?.toLong())
 			acct.delete(flush: true, failOnError: true)
 			return [account: [id: params.id.toLong()]]
 		}catch(Exception e){
-			throw new Exception("#[AccountController : delete] : Exception - full stack trace follows:",e)
+			throw new Exception("[AccountController : delete] : Exception - full stack trace follows:",e)
 		}
 	}
 

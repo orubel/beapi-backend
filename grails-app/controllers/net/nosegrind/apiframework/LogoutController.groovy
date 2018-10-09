@@ -9,11 +9,11 @@ class LogoutController {
 	static allowedMethods = [logout: 'POST']
 
 	def index() {
-		println("logout index")
+		//println("logout index")
 	}
 
 	def logout() {
-		println("logging out...")
+		//println("logging out...")
 		redirect uri: SpringSecurityUtils.securityConfig.logout.filterProcessesUrl // '/logoff'
 	}
 }
