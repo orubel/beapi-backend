@@ -86,6 +86,8 @@ After you have built the Beapi Plugin and have built THIS implementing project, 
 java -Dgrails.env=dev -jar build/libs/beapi-backend-0.1.jar -Xms1024m -Xmx2048m -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=10 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:MaxGCPauseMillis=250 -XX:MaxGCMinorPauseMillis=100 -server
 ```
 
+## Run as a Service
+You can also copy the 'beapi_backend.sh' script to your /etc/init.d' directory on your server to run the jar as a service.
 
 
 
