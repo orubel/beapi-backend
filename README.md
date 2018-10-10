@@ -87,7 +87,12 @@ java -Dgrails.env=dev -jar build/libs/beapi-backend-0.1.jar -Xms1024m -Xmx2048m 
 ```
 
 ## Run as a Service
-You can also copy the 'beapi_backend.sh' script to your /etc/init.d' directory on your server to run the jar as a service.
+To run it as a service, copy the 'beapi_backend.sh' script to your /etc/init.d' directory on your server and change the following line in the file to point to the JAR file:
+```
+MAIN_CLASS=beapi_backend-0.1.jar
+```
+As per the BUILD section above, you will find this in the 'build/libs' folder of the project.
+
 
 
 
