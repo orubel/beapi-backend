@@ -1,6 +1,3 @@
-Project relies on Java 1.8.
-Please make sure to have this pre-installed on your system.
-
 ## PRE-INSTALLATION
 1. Project requires Java 1.8. Test your version from a shell/command prompt by typing:
 ``` java -version```
@@ -14,16 +11,20 @@ create database <yourdatabase>;
 ```
 4. While in mysql shell, create user and grant privileges using login/password you just created:
 ```
-GRANT ALL PRIVILEGES ON beapi.* to <login>@'localhost' IDENTIFIED BY '<password>';
-
+GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'localhost' IDENTIFIED BY '<password>';
+flush privileges;
 ```
 ...or if database isn't local...
 ```
 GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'your.server.ip.address' IDENTIFIED BY '<password>';
 flush privileges;
 ```
-5. Clone the BeAPI Plugin locally and do a build
-``` git clone https://github.com/orubel/Beapi-API-Framework.git```
+5. Clone the BeAPI Plugin locally and do a build.
+``` 
+git clone https://github.com/orubel/Beapi-API-Framework.git
+cd Beapi-API-Framework
+./gradlew clean;grails install
+```
 
 6. Build Beapi Plugin
 ```grails clean;grails install```
@@ -59,7 +60,7 @@ NOTE: Use the JDBC Driver and dialect for whatever database you want; this is me
 7. Edit /grails-app/conf/beapi.yml and change the iostate default directory in the different environments:
 ```
         iostate:
-            preloadDir: '/home/{your home dir}/.iostate'
+            preloadDir: '/home/{your home dir}/.beapi/.iostate'
             archInstanceUrls:
                 proxy: "127.0.0.1"
                 mq: "127.0.0.1"
@@ -79,16 +80,12 @@ mkdir ~/.beapi/.iostate
 ./gradlew --stop;./gradlew clean;./gradlew build
 ```
 
-
-### INITIALIZATION
-
-1. move 'beapi_backend' to '/etc/init.d/' directory and change 'PATH_TO_JAR' so it points to your application
-2. start the application by typing:
+## RUN
+After you have built the Beapi Plugin and have built THIS implementing project, you can then typed the following command from within the directory structure of the project to run it:
 ```
-sudo /etc/init.d/beapi_backend start
+java -Dgrails.env=dev -jar build/libs/beapi-backend-0.1.jar -Xms1024m -Xmx2048m -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=10 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:MaxGCPauseMillis=250 -XX:MaxGCMinorPauseMillis=100 -server
 ```
 
 
-**NOTE** : Will add an 'init.d' script in the future so it can be run as daemon. This will be added to 'INSTALLATION' instructions
 
 
