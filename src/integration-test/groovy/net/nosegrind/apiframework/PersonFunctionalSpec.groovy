@@ -1,9 +1,10 @@
 package net.nosegrind.apiframework
 
+
 import grails.testing.mixin.integration.Integration
-import grails.transaction.*
+import grails.gorm.transactions.*
 import spock.lang.*
-import geb.spock.*
+//import geb.spock.*
 import grails.util.Holders
 import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
@@ -17,7 +18,7 @@ import org.grails.web.util.WebUtils
  */
 
 @Integration
-//@Rollback
+@Rollback
 class PersonFunctionalSpec extends Specification {
 
     @Shared String token
