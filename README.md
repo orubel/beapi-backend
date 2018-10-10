@@ -2,7 +2,7 @@
 1. Project requires Java 1.8. Test your version from a shell/command prompt by typing:
 ``` java -version```
 
-2. Install Grails 3.3.X
+2. Install Grails 3.3.X (the project is a mixture of Grails and Spring-boot components)
  *  http://docs.grails.org/latest/guide/gettingStarted.html#downloadingAndInstalling
  
 3. Login to mysql as 'root' and create database (you can use any database you wish; see 'NOTE' below)
