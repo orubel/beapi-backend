@@ -13,25 +13,25 @@ class ApidocController {
 	}
 
 	LinkedHashMap show(){
-		println("apidoc > show called")
 		Map docs = [:]
 		
 		grailsApplication.controllerClasses.each { DefaultGrailsControllerClass controllerClass ->
 			String controllername = controllerClass.logicalPropertyName
 
 			def cache = apiCacheService.getApiCache(controllername)
+
 			if(cache){
 				cache[params.apiObject].each() { it ->
-
 					if (!['deprecated', 'defaultAction', 'currentStable'].contains(it.key)) {
 						if(!docs["${controllername}"]){
 							docs["${controllername}"] =[:]
 						}
 						String action = it.key
-
 						docs["${controllername}"]["${action}"] = cache[params.apiObject][action]['doc']
 					}
 				}
+			}else{
+
 			}
 		}
 

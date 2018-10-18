@@ -4,14 +4,15 @@ package net.nosegrind.apiframework
 import grails.testing.mixin.integration.Integration
 import grails.gorm.transactions.*
 import spock.lang.*
-//import geb.spock.*
+import geb.spock.*
 import grails.util.Holders
 import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.JsonSlurper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import net.nosegrind.apiframework.ApiCacheService
-import org.grails.web.util.WebUtils
+
 
 /**
  * See http://www.gebish.org/manual/current/ for more instructions
@@ -21,16 +22,18 @@ import org.grails.web.util.WebUtils
 @Rollback
 class PersonFunctionalSpec extends Specification {
 
+    @Autowired
+    ApplicationContext applicationContext
+
     @Shared String token
     @Shared String controller = 'person'
     @Shared String testDomain = 'http://localhost:8080'
     @Shared String currentId
-    @Shared ApplicationContext ctx
+
 
 
     void "login and get token"(){
         setup:"logging in"
-            this.ctx = Holders.grailsApplication.mainContext
             String login = Holders.grailsApplication.config.root.login
             String password = Holders.grailsApplication.config.root.password
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
@@ -52,7 +55,7 @@ class PersonFunctionalSpec extends Specification {
         setup:"api is called"
             String METHOD = "POST"
 
-            ApiCacheService apiCacheService = ctx.getBean("apiCacheService")
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
             Integer version = cache['cacheversion']
 
@@ -91,7 +94,7 @@ class PersonFunctionalSpec extends Specification {
         setup:"api is called"
             String METHOD = "GET"
             LinkedHashMap info = [:]
-            ApiCacheService apiCacheService = this.ctx.getBean("apiCacheService")
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
             Integer version = cache['cacheversion']
@@ -127,7 +130,7 @@ class PersonFunctionalSpec extends Specification {
         setup:"api is called"
             String METHOD = "DELETE"
             LinkedHashMap info = [:]
-            ApiCacheService apiCacheService = this.ctx.getBean("apiCacheService")
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
             Integer version = cache['cacheversion']

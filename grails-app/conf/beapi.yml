@@ -194,8 +194,6 @@ root:
     login: admin
     password: Al1c3Inj@1L
     email: owenr@uw.edu
-perf:
-    url: 'http://perf-scidmz-data.cac.washington.edu/esmond/perfsonar/archive/?format=json&limit=100000000'
 
 
 
