@@ -170,7 +170,7 @@ apitoolkit:
     corsInterceptor:
         includeEnvironments: ['development','test']
         excludeEnvironments: ['production']
-        allowedOrigins: ['localhost:3000']
+        allowedOrigins: ['http://localhost']
 
 ---
 server:

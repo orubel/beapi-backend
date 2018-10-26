@@ -46,7 +46,7 @@ class LoginController {
 
 	/** Show the login page. */
 	def auth() {
-
+		println("login/auth")
 		def conf = getConf()
 
 		if (springSecurityService.isLoggedIn()) {
@@ -65,12 +65,14 @@ class LoginController {
 
 	/** The redirect action for Ajax requests. */
 	def authAjax() {
+		println("login/authAjax")
 		response.setHeader 'Location', conf.auth.ajaxLoginFormUrl
 		render(status: HttpServletResponse.SC_UNAUTHORIZED, text: 'Unauthorized')
 	}
 
 	/** Show denied page. */
 	def denied() {
+		println("login/denied")
 		if (springSecurityService.isLoggedIn() && authenticationTrustResolver.isRememberMe(authentication)) {
 			// have cookie but the page is guarded with IS_AUTHENTICATED_FULLY (or the equivalent expression)
 			redirect action: 'full', params: params
@@ -82,6 +84,7 @@ class LoginController {
 
 	/** Login page for users with a remember-me cookie but accessing a IS_AUTHENTICATED_FULLY page. */
 	def full() {
+		println("login/full")
 		def conf = getConf()
 		render view: 'auth', params: params,
 		       model: [hasCookie: authenticationTrustResolver.isRememberMe(authentication),
@@ -94,7 +97,7 @@ class LoginController {
 
 	/** Callback after a failed login. Redirects to the auth page with a warning message. */
 	def authfail() {
-
+		println("login/authfail")
 		String msg = ''
 		def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
 		if (exception) {
@@ -121,11 +124,13 @@ class LoginController {
 
 	/** The Ajax success redirect url. */
 	def ajaxSuccess() {
+		println("login/ajaxSuccess")
 		return [success: true, username: authentication.name] as JSON
 	}
 
 	/** The Ajax denied redirect url. */
 	def ajaxDenied() {
+		println("login/ajaxDenied")
 		render([error: 'access denied'] as JSON)
 	}
 
