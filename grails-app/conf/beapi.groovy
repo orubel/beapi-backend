@@ -47,14 +47,14 @@ grails.plugin.springsecurity.failureHandler.ajaxAuthFailUrl = '/login/ajaxDenied
 
 
 grails.plugin.springsecurity.filterChain.chainMap = [
+	[pattern: "/api/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter'],
 	[pattern: "${entryPoint}/**",filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "${batchEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "${chainEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "${metricsEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "/admin/**", filters: 'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "/login/**", filters: 'corsSecurityFilter,restAuthenticationFilter'],
+	[pattern: "/login/**", filters: 'corsSecurityFilter'],
 	[pattern: "/logout/**", filters: 'corsSecurityFilter,restAuthenticationFilter'],
-	[pattern: "/api/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter'],
 	[pattern: "/**", filters: 'corsSecurityFilter']
 ]
 
