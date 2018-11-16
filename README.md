@@ -1,15 +1,15 @@
 ## PRE-INSTALLATION
-1. Project requires Java 1.8. Test your version from a shell/command prompt by typing:
+#### 1. Project requires Java 1.8. Test your version from a shell/command prompt by typing:
 ``` java -version```
-
-2. Install Grails 3.3.X (the project is a mixture of Grails and Spring-boot components)
- *  http://docs.grails.org/latest/guide/gettingStarted.html#downloadingAndInstalling
  
-3. Login to mysql as 'root' and create database (you can use any database you wish; see 'NOTE' below)
+#### 2. If you do not have a database setup, login to mysql as 'root' and create database (you can use any database you wish; see 'NOTE' below)
 ```
 create database <yourdatabase>;
 ```
-4. While in mysql shell, create user and grant privileges using login/password you just created:
+
+#### NOTE: You can use whatever database you want but you have to set it up in the 'conf/beapi.yml' file.
+
+While in mysql shell, create user and grant privileges using login/password you just created:
 ```
 GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'localhost' IDENTIFIED BY '<password>';
 flush privileges;
@@ -19,18 +19,18 @@ flush privileges;
 GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'your.server.ip.address' IDENTIFIED BY '<password>';
 flush privileges;
 ```
-5. Clone the BeAPI Plugin locally and do a build.
+
+#### 3. Clone the BeAPI Plugin locally and do a build.
 ``` 
 git clone https://github.com/orubel/Beapi-API-Framework.git
 cd Beapi-API-Framework
 ./gradlew clean;grails install
 ```
-
-6. Build Beapi Plugin
+Once downloaded, go into the directory and build Beapi Plugin
 ```grails clean;grails install```
 
 ## INSTALLATION (this can all be an install script in future)
-1. create 'BEAPI' user (with home dir) for server (do not run as root) // todo
+1. create 'BEAPI' user (with home dir) for server (do not run as root)
 2. Move grails-app/conf/templates/parser/APIParse.groovy script to separate dir and change 'login' and 'password' variables for database at top of script
 3. Edit /grails-app/conf/beapi.yml and change the default login and password for the database in all environments:
 ```
@@ -48,6 +48,7 @@ NOTE: Use the JDBC Driver and dialect for whatever database you want; this is me
 
 
 5. Create a self signed SSL key and store it in '/home/{your home dir}/.keys/keystore.jks' (https://www.sslshopper.com/article-how-to-create-a-self-signed-certificate-using-java-keytool.html)
+
 6. Edit /grails-app/conf/beapi.yml and change the default ssl config:
 ```
         ssl:
@@ -57,6 +58,7 @@ NOTE: Use the JDBC Driver and dialect for whatever database you want; this is me
             key-alias: selfsigned
             key-password: CHANGEPASSWORD
 ```
+
 7. Edit /grails-app/conf/beapi.yml and change the iostate default directory in the different environments:
 ```
         iostate:
@@ -65,6 +67,7 @@ NOTE: Use the JDBC Driver and dialect for whatever database you want; this is me
                 proxy: "127.0.0.1"
                 mq: "127.0.0.1"
 ```
+
 8. Now create two directories in the directory of the user that will be running the script (NOTE: if you are running this from 'beapi_backend', these are created in 'root'):
 ```
 mkdir ~/.beapi
