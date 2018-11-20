@@ -95,7 +95,12 @@ environments:
     development:
         server:
             context-path: ''
-            port: 8080
+            port: 8443
+            ssl:
+                enabled: true
+                keyStore: /home/owenrubel/.ssh
+                keyStorePassword: B00z3U9@R!0t
+                keyAlias: tomcat
         grails:
             serverURL: "http://test.nosegrind.net"
     production:
