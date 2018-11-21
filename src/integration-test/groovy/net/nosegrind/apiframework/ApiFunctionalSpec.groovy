@@ -12,6 +12,7 @@ import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import net.nosegrind.apiframework.ApiCacheService
+import grails.util.Metadata
 
 
 /**
@@ -20,17 +21,17 @@ import net.nosegrind.apiframework.ApiCacheService
 
 @Integration
 @Rollback
-class PersonFunctionalSpec extends Specification {
+class ApiFunctionalSpec extends Specification {
 
     @Autowired
     ApplicationContext applicationContext
 
     @Shared String token
+    @Shared List authorities = ['permitAll']
     @Shared String controller = 'person'
     @Shared String testDomain = 'http://localhost:8080'
     @Shared String currentId
-
-
+    @Shared String appVersion = "v${Metadata.current.getProperty(Metadata.APPLICATION_VERSION, String.class)}"
 
     void "login and get token"(){
         setup:"logging in"
@@ -45,7 +46,9 @@ class PersonFunctionalSpec extends Specification {
 
         when:"set token"
             this.token = info.access_token
-
+            info.authorities.each(){ it ->
+                this.authorities.add(it)
+            }
         then:"has bearer token"
             assert info.token_type == 'Bearer'
     }
@@ -69,7 +72,7 @@ class PersonFunctionalSpec extends Specification {
             data += "}"
             def info
             net.nosegrind.apiframework.Person.withTransaction { status ->
-                def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/v0.1/${this.controller}/${action}"].execute();
+                def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
 
                 proc.waitFor()
                 def outputStream = new StringBuffer()
@@ -81,6 +84,7 @@ class PersonFunctionalSpec extends Specification {
             assert info!=null
         then:"created user"
             cache?."${version}"?."${action}".returns.each(){ k,v ->
+                assert this.authorities.contains(k)
                 v.each(){
                     if(it.keyType=='PRIMARY'){
                         this.currentId = info."${it.name}"
@@ -90,7 +94,7 @@ class PersonFunctionalSpec extends Specification {
             }
     }
 
-    void "GET api call"() {
+    void "GET api call: [domain object]"() {
         setup:"api is called"
             String METHOD = "GET"
             LinkedHashMap info = [:]
@@ -103,7 +107,7 @@ class PersonFunctionalSpec extends Specification {
 
             String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/v0.1/${this.controller}/${action}?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -113,20 +117,49 @@ class PersonFunctionalSpec extends Specification {
             slurper.parseText(output).each(){ k,v ->
                 info[k] = v
             }
-            println(info)
         when:"info is not null"
             assert info!=[:]
         then:"get user"
             cache?."${version}"?."${action}".returns.each(){ k,v ->
+                assert this.authorities.contains(k)
                 v.each(){ it ->
-                    println(it.name)
                     assert info."${it.name}" != null
                 }
             }
     }
 
+    // test list of domain objects
+    void "GET list api call: [list of domain objects]"() {
+        setup:"api is called"
+            String METHOD = "GET"
+            LinkedHashMap info = [:]
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+
+            Integer version = cache['cacheversion']
+
+            String action = 'show'
+
+            String pkey = cache?."${version}"?."${action}".pkey[0]
+
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/list"].execute();
+            proc.waitFor()
+            def outputStream = new StringBuffer()
+            proc.waitForProcessOutput(outputStream, System.err)
+            String output = outputStream.toString()
+
+            def slurper = new JsonSlurper()
+            slurper.parseText(output).each(){ k,v ->
+                info[k] = v
+            }
+        when:"info is not null"
+            assert info!=[:]
+        then:"get user"
+            assert info.size()==Person.count()
+    }
+
     // create using mockdata
-    void "DELETE api call"() {
+    void "DELETE api call: [map]"() {
         setup:"api is called"
             String METHOD = "DELETE"
             LinkedHashMap info = [:]
@@ -136,7 +169,7 @@ class PersonFunctionalSpec extends Specification {
             Integer version = cache['cacheversion']
 
             String action = 'delete'
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/v0.1/${this.controller}/${action}?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/delete?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -159,5 +192,8 @@ class PersonFunctionalSpec extends Specification {
             }
             assert this.currentId == id
     }
+
+
+
 }
 
