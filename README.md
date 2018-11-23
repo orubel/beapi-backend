@@ -74,8 +74,8 @@ mkdir ~/.beapi
 cd ~/.beapi
 mkdir ~/.beapi/.iostate
 ```
-9. Now move all files from 'grails-app/conf/iostate' into '~/.beapi/.iostate'
-10 Move 'grails-app/conf/beapi.*' into '~/.beapi'
+9. Now move all files from 'src/iostate' into '~/.beapi/.iostate'
+10 Move 'grails-app/conf/beapi.groovy' 'grails-app/conf/beapi.yml' and into '~/.beapi'
 
 ## BUILD
 1. From inside the project directory, type:
