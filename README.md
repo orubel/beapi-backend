@@ -20,15 +20,6 @@ GRANT ALL PRIVILEGES ON <yourdatabase>.* to <login>@'your.server.ip.address' IDE
 flush privileges;
 ```
 
-#### 3. Clone the BeAPI Plugin locally and do a build.
-``` 
-git clone https://github.com/orubel/Beapi-API-Framework.git
-cd Beapi-API-Framework
-./gradlew clean;grails install
-```
-Once downloaded, go into the directory and build Beapi Plugin
-```grails clean;grails install```
-
 ## INSTALLATION (this can all be an install script in future)
 1. create 'BEAPI' user (with home dir) for server (do not run as root)
 2. Move grails-app/conf/templates/parser/APIParse.groovy script to separate dir and change 'login' and 'password' variables for database at top of script
@@ -80,7 +71,7 @@ mkdir ~/.beapi/.iostate
 ## BUILD
 1. From inside the project directory, type:
 ```
-./gradlew --stop;./gradlew clean;./gradlew build
+./gradlew build
 ```
 
 ## RUN
