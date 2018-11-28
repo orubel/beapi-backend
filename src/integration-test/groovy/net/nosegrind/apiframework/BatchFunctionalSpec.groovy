@@ -54,7 +54,6 @@ class BatchFunctionalSpec extends Specification {
             assert info.token_type == 'Bearer'
     }
 
-    // create using mockdata
     void "CREATE api call - Concatenate"() {
         setup:"api is called"
             String METHOD = "POST"
@@ -79,10 +78,40 @@ class BatchFunctionalSpec extends Specification {
             assert info!=null
         then:"created user"
             info.each { it ->
-                def out = it as LinkedHashMap
+                def out = new JsonSlurper().parseText(it)
                 this.currentId.add(out.id)
             }
             assert this.currentId.size()==6
+    }
+
+    void "CREATE api call - No Concatenation"() {
+        setup:"api is called"
+        String METHOD = "POST"
+
+        ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+        Integer version = cache['cacheversion']
+
+        String action = 'create'
+        String data = "{'batch': [{'name': 'test1'},{'name': 'test2'},{'name': 'test3'},{'name': 'test4'},{'name': 'test5'},{'name': 'test6'}]}"
+        def info
+        net.nosegrind.apiframework.Person.withTransaction { status ->
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
+
+            proc.waitFor()
+            def outputStream = new StringBuffer()
+            proc.waitForProcessOutput(outputStream, System.err)
+            String output = outputStream.toString()
+            info = new JsonSlurper().parseText(output)
+        }
+        when:"info is not null"
+            assert info!=null
+        then:"created user"
+            def out = info as LinkedHashMap
+            this.currentId.add(out.id)
+
+            println(this.currentId.size())
+            assert this.currentId.size()==7
     }
 
 
