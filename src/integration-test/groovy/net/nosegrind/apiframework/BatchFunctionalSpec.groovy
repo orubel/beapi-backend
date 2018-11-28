@@ -15,6 +15,7 @@ import net.nosegrind.apiframework.ApiCacheService
 import grails.util.Metadata
 import org.grails.web.json.JSONObject
 import groovy.json.JsonSlurperClassic
+import grails.converters.JSON
 
 /**
  * See http://www.gebish.org/manual/current/ for more instructions
@@ -65,15 +66,13 @@ class BatchFunctionalSpec extends Specification {
             String action = 'create'
             String data = "{'combine':true,'batch': [{'name': 'test1'},{'name': 'test2'},{'name': 'test3'},{'name': 'test4'},{'name': 'test5'},{'name': 'test6'}]}"
             def info
-            net.nosegrind.apiframework.Person.withTransaction { status ->
-                def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
+            proc.waitFor()
+            def outputStream = new StringBuffer()
+            proc.waitForProcessOutput(outputStream, System.err)
+            String output = outputStream.toString()
+            info = new JsonSlurper().parseText(output)
 
-                proc.waitFor()
-                def outputStream = new StringBuffer()
-                proc.waitForProcessOutput(outputStream, System.err)
-                String output = outputStream.toString()
-                info = new JsonSlurper().parseText(output)
-            }
         when:"info is not null"
             assert info!=null
         then:"created user"
@@ -86,72 +85,71 @@ class BatchFunctionalSpec extends Specification {
 
     void "CREATE api call - No Concatenation"() {
         setup:"api is called"
-        String METHOD = "POST"
+            String METHOD = "POST"
 
-        ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-        Integer version = cache['cacheversion']
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            Integer version = cache['cacheversion']
 
-        String action = 'create'
-        String data = "{'batch': [{'name': 'test1'},{'name': 'test2'},{'name': 'test3'},{'name': 'test4'},{'name': 'test5'},{'name': 'test6'}]}"
-        def info
-        net.nosegrind.apiframework.Person.withTransaction { status ->
+            String action = 'create'
+            String data = "{'batch': [{'name': 'test1'},{'name': 'test2'},{'name': 'test3'},{'name': 'test4'},{'name': 'test5'},{'name': 'test6'}]}"
+            def info
             def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
-
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
             info = new JsonSlurper().parseText(output)
-        }
+
         when:"info is not null"
             assert info!=null
         then:"created user"
             def out = info as LinkedHashMap
             this.currentId.add(out.id)
-
-            println(this.currentId.size())
             assert this.currentId.size()==7
     }
 
 
     // create using mockdata
-    /*
-    void "DELETE api call: [map]"() {
+    void "DELETE api call"() {
         setup:"api is called"
             String METHOD = "DELETE"
-            LinkedHashMap info = [:]
+
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-
             Integer version = cache['cacheversion']
-
             String action = 'delete'
-            String data = "{'batch': [{'id': 'test1'},{'id': 'test2'},{'id': 'test3'},{'id': 'test4'},{'id': 'test5'},{'id': 'test6'}]}"
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
+
+            String data = "{\"combine\":true,\"batch\":["
+            int inc = 1
+            int size = this.currentId.size()
+            this.currentId.each(){
+                data += "{\"id\":${it}}"
+                inc++
+                if(inc<=size){
+                    data += ","
+                }
+            }
+            data += "]}"
+
+            def info
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/delete"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
-            def slurper = new JsonSlurper()
-            slurper.parseText(output).each(){ k,v ->
-                info[k] = v
-            }
+            info = new JsonSlurper().parseText(output)
+
         when:"info is not null"
             assert info!=null
         then:"delete created user"
-            def id
-            cache?."${version}"?."${action}".returns.each(){ k,v ->
-                v.each(){ it ->
-                    if(it.keyType=='PRIMARY'){
-                        id = info."${it.name}"
-                    }
-
-                }
+            info.each { it ->
+                def out = new JsonSlurper().parseText(it)
+                this.currentId.add(out.id)
             }
-            assert this.currentId == id
+            assert this.currentId.size()==14
     }
-    */
+
 
 
 

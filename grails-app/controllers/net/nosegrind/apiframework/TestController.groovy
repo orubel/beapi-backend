@@ -10,16 +10,20 @@ class TestController {
             test = Test.get(params?.id?.toLong())
             return [test: test]
         }catch(Exception e){
-            throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
+            throw new Exception("[TestController : get] : Exception - full stack trace follows:",e)
         }
     }
 
     LinkedHashMap create(){
-        Test test = new Test(name:"${params.name}")
-        if(!test.save(flush:true,failOnError:true)){
-            test.errors.allErrors.each { log.error it }
+        try{
+            Test test = new Test(name:"${params.name}")
+            if(!test.save(flush:true,failOnError:true)){
+                test.errors.allErrors.each { log.error it }
+            }
+            return [test:test]
+        }catch(Exception e){
+            throw new Exception("[TestController : create] : Exception - full stack trace follows:",e)
         }
-        return [test:test]
     }
 
     LinkedHashMap delete() {
@@ -29,7 +33,7 @@ class TestController {
             test.delete(flush: true, failOnError: true)
             return [test: [id: params.id.toLong()]]
         }catch(Exception e){
-            throw new Exception("#[PersonController : delete] : Exception - full stack trace follows:",e)
+            throw new Exception("#[TestController : delete] : Exception - full stack trace follows:",e)
         }
     }
 
