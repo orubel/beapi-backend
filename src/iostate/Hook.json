@@ -52,6 +52,11 @@ net.nosegrind.Hook
             "type": "String",
             "description":"Api Service being Subscribed to",
 	    "mockData":"mockEndpoint"
+        },
+        "authentication": {
+            "type": "String",
+            "description":"Token type",
+	    "mockData":"Bearer 23978ywe0fdi8h309u4ju0309je3r90f"
         }
     },
 	"CURRENTSTABLE": "1",
@@ -71,7 +76,7 @@ net.nosegrind.Hook
 					    "permitAll":[]
 					},
 					"RESPONSE": {
-						"permitAll":["id","version","user","name","url","format","service"]
+						"permitAll":["id","version","user","name","url","format","service","authentication"]
 					}
 				},
 				"show": {
@@ -85,7 +90,7 @@ net.nosegrind.Hook
 					    "permitAll":["id"]
 					},
 					"RESPONSE": {
-						"permitAll":["id","version","user","name","url","format","service"]
+						"permitAll":["id","version","user","name","url","format","service","authentication"]
 					}
 				},
 				"create":{
@@ -96,7 +101,7 @@ net.nosegrind.Hook
 				    	    "BATCH":["ROLE_ADMIN","ROLE_ARCH"]
 					},
 					"REQUEST": {
-					    "permitAll":["name","url","format","service"]
+					    "permitAll":["name","url","format","service","authentication"]
 					},
 					"RESPONSE": {
 						"permitAll":["id","version"]
@@ -110,7 +115,7 @@ net.nosegrind.Hook
 				    	    "BATCH":["ROLE_ADMIN","ROLE_ARCH"]
 					},
 					"REQUEST": {
-					    "permitAll":["id","version","name","url","format","service"]
+					    "permitAll":["id","version","name","url","format","service","authentication"]
 					},
 					"RESPONSE": {
 					    "permitAll":["id","version"]
