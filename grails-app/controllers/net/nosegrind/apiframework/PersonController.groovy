@@ -14,11 +14,15 @@ class PersonController{
 	java.lang.String value(){}
 
 	LinkedHashMap create(){
-		Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
-		if(!user.save(flush:true,failOnError:true)){
-			user.errors.allErrors.each { log.error it }
+		try{
+			Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
+			if(!user.save(flush:true,failOnError:true)){
+				user.errors.allErrors.each { println(it) }
+			}
+			return [person:user]
+		}catch(Exception e){
+			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
 		}
-		return [person:user]
 	}
 
 	LinkedHashMap show(){

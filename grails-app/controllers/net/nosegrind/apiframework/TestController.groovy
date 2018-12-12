@@ -5,6 +5,11 @@ class TestController {
     def springSecurityService
 
     LinkedHashMap show(){
+        println("test/show called")
+        println(params)
+        f = new File('myfile.txt')
+        f.append('hello again!\n')
+        /*
         try{
             Test test
             test = Test.get(params?.id?.toLong())
@@ -12,6 +17,8 @@ class TestController {
         }catch(Exception e){
             throw new Exception("[TestController : get] : Exception - full stack trace follows:",e)
         }
+        */
+        return [test:params]
     }
 
     LinkedHashMap create(){
@@ -38,8 +45,7 @@ class TestController {
     }
 
     LinkedHashMap testHook() {
-        Test test = Test.get(params?.id?.toLong())
-        return [test:test]
+        return [test:params]
     }
 
     protected boolean isSuperuser() {

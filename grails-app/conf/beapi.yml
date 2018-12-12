@@ -1,5 +1,9 @@
 ---
 grails:
+    controllers:
+        upload:
+            maxFileSize: 26214400
+            maxRequestSize: 26214400
     profile: web-plugin
     codegen:
         defaultPackage: grails.api.framework
@@ -15,6 +19,8 @@ spring:
 
 ---
 grails:
+    cors:
+        enabled: true
     mime:
         disable:
             accept:
@@ -92,15 +98,16 @@ quartz:
     autoStartup: true
 
 environments:
+    test:
+        server:
+            context-path: ''
+            port: 8080
+        grails:
+            serverURL: "http://test.nosegrind.net"
     development:
         server:
             context-path: ''
-            port: 8443
-            ssl:
-                enabled: true
-                keyStore: /home/owenrubel/.ssh
-                keyStorePassword: B00z3U9@R!0t
-                keyAlias: tomcat
+            port: 8080
         grails:
             serverURL: "http://test.nosegrind.net"
     production:
@@ -112,22 +119,97 @@ environments:
 
 ---
 environments:
-    development:
+    test:
+        webhookActive: false
         apiThrottle: false
+        postProcess: false
         iostate:
-            preloadDir: '.bottledwind/.iostate'
+            preloadDir: '.beapi/.iostate'
             archInstanceUrls:
                 proxy: "127.0.0.1"
                 mq: "127.0.0.1"
         dataSource:
             pooled: true
             jmxExport: true
-            driverClassName: "org.h2.Driver"
-            username: "sa"
-            password: ""
-            dbCreate: "create-drop"
-            url: "jdbc:h2:mem:bw"
-            # dbCreate: update
+            driverClassName: "com.mysql.jdbc.Driver"
+            dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
+            username: "root"
+            password: "password"
+            # dbCreate: "create-drop"
+            url: "jdbc:mysql://localhost:3306/testdb"
+            dbCreate: update
+            properties:
+                   jmxEnabled: true
+                   initialSize: 5
+                   maxActive: 50
+                   minIdle: 5
+                   maxIdle: 25
+                   maxWait: 10000
+                   maxAge: 600000
+                   timeBetweenEvictionRunsMillis: 5000
+                   minEvictableIdleTimeMillis: 60000
+                   validationQuery: "SELECT 1"
+                   validationQueryTimeout: 3
+                   validationInterval: 15000
+                   testOnBorrow: true
+                   testWhileIdle: true
+                   testOnReturn: false
+                   jdbcInterceptors: "ConnectionState"
+                   defaultTransactionIsolation: 2 # "java.sql.Connection.TRANSACTION_READ_COMMITTED"
+    development:
+        webhookActive: false
+        apiThrottle: false
+        postProcess: false
+        iostate:
+            preloadDir: '.beapi/.iostate'
+            archInstanceUrls:
+                proxy: "127.0.0.1"
+                mq: "127.0.0.1"
+        dataSource:
+            pooled: true
+            jmxExport: true
+            driverClassName: "com.mysql.jdbc.Driver"
+            dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
+            username: "root"
+            password: "password"
+            # dbCreate: "create-drop"
+            url: "jdbc:mysql://localhost:3306/testdb"
+            dbCreate: update
+            properties:
+                   jmxEnabled: true
+                   initialSize: 5
+                   maxActive: 50
+                   minIdle: 5
+                   maxIdle: 25
+                   maxWait: 10000
+                   maxAge: 600000
+                   timeBetweenEvictionRunsMillis: 5000
+                   minEvictableIdleTimeMillis: 60000
+                   validationQuery: "SELECT 1"
+                   validationQueryTimeout: 3
+                   validationInterval: 15000
+                   testOnBorrow: true
+                   testWhileIdle: true
+                   testOnReturn: false
+                   jdbcInterceptors: "ConnectionState"
+                   defaultTransactionIsolation: 2 # "java.sql.Connection.TRANSACTION_READ_COMMITTED"
+    production:
+        apiThrottle: true
+        iostate:
+            preloadDir: '.beapi/.iostate'
+            archInstanceUrls:
+                proxy: "127.0.0.1"
+                mq: "127.0.0.1"
+        dataSource:
+            pooled: true
+            jmxExport: true
+            driverClassName: "com.mysql.jdbc.Driver"
+            dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
+            username: "root"
+            password: "password"
+            # dbCreate: "create-drop"
+            url: "jdbc:mysql://localhost:3306/testdb"
+            dbCreate: update
             properties:
                    jmxEnabled: true
                    initialSize: 5
@@ -150,7 +232,9 @@ environments:
 apitoolkit:
     apiName: api
     attempts: 5
+    procCores: 8
     roles: ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+    views: ['admin','apidoc','api','login','logout']
     apichain:
         limit: 3
     rest:
@@ -175,30 +259,31 @@ apitoolkit:
     corsInterceptor:
         includeEnvironments: ['development','test']
         excludeEnvironments: ['production']
-        allowedOrigins: ['http://localhost']
+        allowedOrigins: ['http://localhost','http://localhost:8080','localhost','127.0.0.1']
 
 ---
 server:
     tomcat:
-        backgroundProcessorDelay: 30
-        maxThreads: 350
+        backgroundProcessorDelay: 10
+        maxThreads: 500
         uriEncoding: UTF-8
         compression: off
         compressableMimeTypes: application/json,text/json,application/xml,text/xml,text/plain
     use-forward-headers: true
     port: 8443                                  # The port to listen on
     ssl:
-        enabled: false                           # Activate HTTPS mode on the server port
-        key-store: /home/owenrubel/.keys/keystore.jks         # e.g. /etc/tomcat7/keystore/tomcat.keystore
-        key-store-password: GINMAKESAMANMEAN      # e.g. changeit
-        key-alias: selfsigned                   # e.g. tomcat
-        key-password: BOOZEUPANDRIOT
+        enabled: true                           # Activate HTTPS mode on the server port
+        keyStore: /home/orubel/.ssh/selfsigned.jks         # e.g. /etc/tomcat7/keystore/tomcat.keystore
+        keyStorePassword: password      # e.g. changeit
+        keyAlias: tomcat                   # e.g. tomcat
 
 ---
 root:
     login: admin
     password: Al1c3Inj@1L
     email: owenr@uw.edu
+perf:
+    url: 'http://perf-scidmz-data.cac.washington.edu/esmond/perfsonar/archive/?format=json&limit=100000000'
 
 
 

@@ -4,6 +4,7 @@ import grails.util.Metadata
 
 String apiVersion = Metadata.current.getApplicationVersion()
 // fix for dots not working with spring security pathing
+String adminEntryPoint = "/v${apiVersion}".toString()
 String entryPoint = "/v${apiVersion}".toString()
 String batchEntryPoint = "/b${apiVersion}".toString()
 String chainEntryPoint = "/c${apiVersion}".toString()
@@ -11,6 +12,24 @@ String metricsEntryPoint = "/p${apiVersion}".toString()
 //String domainEntryPoint = "/d${apiVersion}".toString()
 
 
+// The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
+grails.mime.use.accept.header = false // Default value is true.
+grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
+grails.mime.types = [ // the first one is the default format
+                      all:           '*/*', // 'all' maps to '*' or the first available format in withFormat
+                      atom:          'application/atom+xml',
+                      css:           'text/css',
+                      csv:           'text/csv',
+                      form:          'application/x-www-form-urlencoded',
+                      html:          ['text/html','application/xhtml+xml'],
+                      js:            'text/javascript',
+                      json:          ['application/json', 'text/json'],
+                      multipartForm: 'multipart/form-data',
+                      rss:           'application/rss+xml',
+                      text:          'text/plain',
+                      hal:           ['application/hal+json','application/hal+xml'],
+                      xml:           ['text/xml', 'application/xml']
+]
 
 // move to RequestMap once stabilized
 grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
@@ -45,23 +64,29 @@ grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/login/ajaxSucce
 grails.plugin.springsecurity.failureHandler.defaultFailureUrl = '/login/ajaxDenied'
 grails.plugin.springsecurity.failureHandler.ajaxAuthFailUrl = '/login/ajaxDenied'
 
+// DBREVERSEENGINEER
+//grails.plugin.reveng.packageName = "io.beapi"
+//grails.plugin.reveng.manyToManyBelongsTos = 'none'
+
 
 grails.plugin.springsecurity.filterChain.chainMap = [
-	[pattern: "/api/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter'],
+	[pattern: "/api/auth", filters: 'corsSecurityFilter,restAuthenticationFilter'],
+	[pattern: "/api/login", filters: 'corsSecurityFilter,restAuthenticationFilter'],
+	[pattern: "/api/logout", filters: 'corsSecurityFilter,restLogoutFilter'],
 	[pattern: "${entryPoint}/**",filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "${batchEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "${chainEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "${metricsEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
 	[pattern: "/admin/**", filters: 'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "/login/**", filters: 'corsSecurityFilter'],
-	[pattern: "/logout/**", filters: 'corsSecurityFilter,restAuthenticationFilter'],
-	[pattern: "/**", filters: 'corsSecurityFilter']
+	[pattern: "/login/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter'],
+	[pattern: "/logout/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
+	[pattern: "/test/testHook", filters: 'corsSecurityFilter,restAuthenticationFilter,contentTypeMarshallerFilter'],
+	[pattern: "/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter']
 ]
-
 
 grails.plugin.springsecurity.interceptUrlMap = [
         [pattern:"/api/**",            	access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
-		[pattern:"/${entryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
+	[pattern:"/${entryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
         [pattern:"/${batchEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
         [pattern:"/${chainEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
         [pattern:"/${metricsEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
@@ -72,16 +97,13 @@ grails.plugin.springsecurity.interceptUrlMap = [
         [pattern:'/index',              access:['permitAll']],
         [pattern:'/index.gsp',          access:['permitAll']],
         [pattern:'/assets/**',          access:['permitAll']],
-        [pattern:'/auth',               access:['permitAll']],
-        [pattern:'/auth/**',            access:['permitAll']],
-		[pattern:'/login',              access:["permitAll"]],
-		[pattern:'/login/**',           access:["permitAll"]],
-		[pattern:'/logout',             access:["permitAll"]],
-		[pattern:'/logout/**',          access:["permitAll"]],
-    [pattern: '/**', access: ['denyAll'], httpMethod: 'GET'],
-    [pattern: '/**', access: ['denyAll'], httpMethod: 'POST'],
-    [pattern: '/**', access: ['denyAll'], httpMethod: 'PUT'],
-    [pattern: '/**', access: ['denyAll'], httpMethod: 'DELETE']
+	[pattern:'/login',              access:["permitAll"]],
+	[pattern:'/login/**',           access:["permitAll"]],
+	[pattern:'/logout',             access:["permitAll"]],
+	[pattern:'/logout/**',          access:["permitAll"]],
+	[pattern:'/admin',              access:["permitAll"]],
+	[pattern:'/admin/**',           access:["permitAll"]],
+	[pattern:'/test/testHook',      access:["permitAll"]]
 ]
 
 
@@ -123,13 +145,13 @@ grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.springsecurity.useSecurityEventListener = false
 
 
-// Added by the BeAPI API Framework plugin:
-apitoolkit.attempts= 5
-apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
-apitoolkit.chaining.enabled= true
-apitoolkit.batching.enabled= true
+// Added by the Reactive API Framework plugin:
+//apitoolkit.attempts= 5
+//apitoolkit.roles= ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
+//apitoolkit.chaining.enabled= true
+//apitoolkit.batching.enabled= true
 
-
+/*
 apitoolkit.encoding= 'UTF-8'
 apitoolkit.user.roles= ['ROLE_USER']
 apitoolkit.admin.roles= ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
@@ -138,7 +160,10 @@ apitoolkit.webhook.services= ['iostate']
 apitoolkit.iostate.preloadDir= '/home/orubel/.iostate'
 apitoolkit.corsInterceptor.includeEnvironments= ['development','test']
 apitoolkit.corsInterceptor.excludeEnvironments= ['production']
-apitoolkit.corsInterceptor.allowedOrigins= ['localhost:3000']
+apitoolkit.corsInterceptor.allowedOrigins= ['http://localhost','http://localhost:8080']
+*/
+
+
 
 
 

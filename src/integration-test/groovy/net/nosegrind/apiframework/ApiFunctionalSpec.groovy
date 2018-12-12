@@ -70,16 +70,26 @@ class ApiFunctionalSpec extends Specification {
                 }
             }
             data += "}"
-            def info
-            net.nosegrind.apiframework.Person.withTransaction { status ->
-                def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
 
-                proc.waitFor()
-                def outputStream = new StringBuffer()
-                proc.waitForProcessOutput(outputStream, System.err)
-                String output = outputStream.toString()
-                info = new JsonSlurper().parseText(output)
+            def info
+
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
+
+            proc.waitFor()
+            def outputStream = new StringBuffer()
+            proc.waitForProcessOutput(outputStream, System.err)
+            String output = outputStream.toString()
+            println("###"+output+"###")
+
+
+
+            def slurper = new JsonSlurper()
+            slurper.parseText(output).each(){ k,v ->
+                println(k+"/"+v)
             }
+
+            //info = new JsonSlurper().parseText(output)
+
         when:"info is not null"
             assert info!=null
         then:"created user"
@@ -102,9 +112,7 @@ class ApiFunctionalSpec extends Specification {
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
             Integer version = cache['cacheversion']
-
             String action = 'show'
-
             String pkey = cache?."${version}"?."${action}".pkey[0]
 
             def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
