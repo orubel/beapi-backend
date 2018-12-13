@@ -79,16 +79,9 @@ class ApiFunctionalSpec extends Specification {
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
-            println("###"+output+"###")
 
 
-
-            def slurper = new JsonSlurper()
-            slurper.parseText(output).each(){ k,v ->
-                println(k+"/"+v)
-            }
-
-            //info = new JsonSlurper().parseText(output)
+            info = new JsonSlurper().parseText(output)
 
         when:"info is not null"
             assert info!=null

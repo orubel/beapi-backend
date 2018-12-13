@@ -5,8 +5,6 @@ class TestController {
     def springSecurityService
 
     LinkedHashMap show(){
-        println("test/show called")
-        println(params)
         f = new File('myfile.txt')
         f.append('hello again!\n')
         /*
