@@ -6,7 +6,7 @@ class Hook {
 	String url
 	String format = 'JSON'
 	String service
-	String authentication
+	String authorization
 	Long attempts = 0
 	Boolean isEnabled = true
 	Date dateCreated
@@ -22,6 +22,6 @@ class Hook {
 		format(nullable:false)
 		service(nullable:false)
 		attempts(nullable:false)
-		authentication(nullable:true)
+		authorization(nullable:true)
 	}
 }

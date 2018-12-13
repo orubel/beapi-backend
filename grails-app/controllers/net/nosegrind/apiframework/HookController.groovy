@@ -38,6 +38,9 @@ class HookController {
 		webhookInstance.dateCreated = new Date()
 		webhookInstance.dateCreated = new Date()
 		webhookInstance.service = params.service
+		if(params.authorization) {
+			webhookInstance.authorization = params.authorization
+		}
 
 		if (webhookInstance.save(flush: true)) {
 			return [hook:webhookInstance]
@@ -62,7 +65,10 @@ class HookController {
 		webhookInstance.url = params.url
 		webhookInstance.format = params.format
 		webhookInstance.service = params.service
-
+		if(params.authorization) {
+			webhookInstance.authorization = params.authorization
+		}
+		
 		if (webhookInstance.save(flush: true)) {
 			return [hook:webhookInstance]
 		}
