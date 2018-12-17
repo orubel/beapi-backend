@@ -1,5 +1,5 @@
 ## PRE-INSTALLATION
-#### 1. Project requires Java 1.8. Test your version from a shell/command prompt by typing:
+#### 1. Project requires Java 1.8 and curl preinstalled (curl used for testing). Test your version from a shell/command prompt by typing:
 ``` java -version```
  
 #### 2. If you do not have a database setup, login to mysql as 'root' and create database (you can use any database you wish; see 'NOTE' below)
