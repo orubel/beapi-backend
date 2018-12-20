@@ -66,7 +66,15 @@ cd ~/.beapi
 mkdir ~/.beapi/.iostate
 ```
 9. Now move all files from 'src/iostate' into '~/.beapi/.iostate'
-10 Move 'grails-app/conf/beapi.groovy' 'grails-app/conf/beapi.yml' and into '~/.beapi'
+
+10. Move 'grails-app/conf/beapi.groovy' 'grails-app/conf/beapi.yml' and into '~/.beapi'
+
+11. Change the settings in your beapi.yml file such as 
+ - username/password for your database under 'test','production','development' environments
+ - dialect/driverClassName for your database
+ - url for your database
+ - serverURL
+ - ssl keystore/keyStorePassword/KeyAlias
 
 ## BUILD
 1. From inside the project directory, type:
