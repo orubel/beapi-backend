@@ -62,8 +62,7 @@ class BatchFunctionalSpec extends Specification {
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
             Integer version = cache['cacheversion']
-
-
+        
 
             String action = 'create'
             String data = "{'combine':true,'batch': [{'name': 'test1'},{'name': 'test2'},{'name': 'test3'},{'name': 'test4'},{'name': 'test5'},{'name': 'test6'}]}"
@@ -73,8 +72,6 @@ class BatchFunctionalSpec extends Specification {
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
-
-        println("${this.testDomain}/${this.appVersion}/${this.controller}/${action}")
 
             info = new JsonSlurper().parseText(output)
 
