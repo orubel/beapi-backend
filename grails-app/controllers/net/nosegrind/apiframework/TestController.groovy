@@ -8,7 +8,11 @@ class TestController {
         try{
             Test test
             test = Test.get(params?.id?.toLong())
-            return [test: test]
+            if(test) {
+                return [test: test]
+            }else{
+                render(status: 500,text:"Id does not match record in database.")
+            }
         }catch(Exception e){
             throw new Exception("[TestController : get] : Exception - full stack trace follows:",e)
         }
@@ -31,10 +35,16 @@ class TestController {
         try {
             Test test
             test = Test.get(params?.id?.toLong())
-            test.delete(flush: true, failOnError: true)
+            if (test) {
+                if (!test.delete(flush: true, failOnError: true)) {
+                    test.errors.allErrors.each { println it }
+                }
+            }else{
+                render(status: 500,text:"Id does not match record in database.")
+            }
             return [test: [id: params.id.toLong()]]
         }catch(Exception e){
-            throw new Exception("#[TestController : delete] : Exception - full stack trace follows:",e)
+            throw new Exception("[TestController : delete] : Exception - full stack trace follows:",e)
         }
     }
 

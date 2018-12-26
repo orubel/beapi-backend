@@ -16,10 +16,14 @@ class PersonController{
 	LinkedHashMap create(){
 		try{
 			Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
-			if(!user.save(flush:true,failOnError:true)){
-				user.errors.allErrors.each { println(it) }
+			if(user){
+				if(!user.save(flush:true,failOnError:true)){
+					user.errors.allErrors.each { println(it) }
+				}
+				return [person:user]
+			}else{
+				render(status: 500,text:"Id does not match record in database.")
 			}
-			return [person:user]
 		}catch(Exception e){
 			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
 		}
@@ -27,13 +31,11 @@ class PersonController{
 
 	LinkedHashMap show(){
 		try{
-			Person user
-			if(isSuperuser()) {
-				user = Person.get(params?.id?.toLong())
+			Person user = (isSuperuser())?Person.get(params?.id?.toLong()):Person.get(springSecurityService.principal.id)
+			if(user){
 				return [person: user]
 			}else{
-				user = Person.get(springSecurityService.principal.id)
-				return [person: user]
+				render(status: 500,text:"Id does not match record in database.")
 			}
 
 		}catch(Exception e){
@@ -45,6 +47,11 @@ class PersonController{
 		try{
 			Person user
 			user = Person.get(params?.username)
+			if(user){
+				return [person: user]
+			}else{
+				render(status: 500,text:"Id does not match record in database.")
+			}
 			return [person: user]
 		}catch(Exception e){
 			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
@@ -53,17 +60,17 @@ class PersonController{
 
 
 	LinkedHashMap delete() {
+		Person user
 		try {
-			Person person
-			if(isSuperuser()) {
-				person = Person.get(params?.id?.toLong())
+			user = Person.get(params.id)
+			if(user){
+				user.delete(flush: true, failOnError: true)
+				return [person: [id:params.id.toLong()]]
 			}else{
-				person = Person.get(springSecurityService.principal.id)
+				render(status: 500,text:"Id " + params.id + " does not match record in database.")
 			}
-			person.delete(flush: true, failOnError: true)
-			return [person: [id: params.id.toLong()]]
 		}catch(Exception e){
-			throw new Exception("#[PersonController : delete] : Exception - full stack trace follows:",e)
+			throw new Exception("[PersonController : delete] : Exception - full stack trace follows:",e)
 		}
 	}
 

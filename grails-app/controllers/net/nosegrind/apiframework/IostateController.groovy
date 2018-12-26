@@ -9,23 +9,6 @@ class IostateController {
 	def apiCacheService
 	def webhookService
 
-	/*
-	* list name of collections of iostate
-	*/
-	LinkedHashMap list() {
-		if(isSuperuser()){
-			List temp = apiCacheService.getCacheNames()
-			List cacheNames = []
-			temp.each(){
-				if(!['hook','iostate'].contains(it)){
-					 cacheNames.add(it)
-				}
-			}
-			LinkedHashMap model = [name:cacheNames]
-			return ['iostate':model]
-		}
-	}
-
 	LinkedHashMap update() {
 		if(isSuperuser()){
 		    def file = request.getFile('iostate')

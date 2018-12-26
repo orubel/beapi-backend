@@ -175,9 +175,11 @@ class ApiFunctionalSpec extends Specification {
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
+
             def slurper = new JsonSlurper()
             slurper.parseText(output).each(){ k,v ->
                 info[k] = v
+
             }
         when:"info is not null"
             assert info!=null
@@ -187,6 +189,8 @@ class ApiFunctionalSpec extends Specification {
                 v.each(){ it ->
                     if(it.keyType=='PRIMARY'){
                         id = info."${it.name}"
+                        println("currentId:" + this.currentId)
+                        println("id:" + id)
                     }
 
                 }
