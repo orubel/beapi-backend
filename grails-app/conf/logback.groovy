@@ -28,7 +28,8 @@ if(targetDir) {
     logger 'grails.plugins.quartz', ERROR, ['STDOUT','FULL_STACKTRACE']
 
     // Spring Security Rest Testing/Logging
-    logger("org.springframework.security", ERROR, ['STDOUT','FULL_STACKTRACE'], false)
-    logger("grails.plugin.springsecurity", ERROR, ['STDOUT','FULL_STACKTRACE'], false)
+    logger("org.springframework.security", ERROR, ['STDOUT','FULL_STACKTRACE'])
+    logger("grails.plugin.springsecurity", ERROR, ['STDOUT','FULL_STACKTRACE'])
     logger("org.pac4j", DEBUG, ['STDOUT'], false)
+
 }

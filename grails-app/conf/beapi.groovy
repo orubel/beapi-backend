@@ -70,40 +70,39 @@ grails.plugin.springsecurity.failureHandler.ajaxAuthFailUrl = '/login/ajaxDenied
 
 
 grails.plugin.springsecurity.filterChain.chainMap = [
-	[pattern: "/api/auth", filters: 'corsSecurityFilter,restAuthenticationFilter'],
-	[pattern: "/api/login", filters: 'corsSecurityFilter,restAuthenticationFilter'],
-	[pattern: "/api/logout", filters: 'corsSecurityFilter,restLogoutFilter'],
-	[pattern: "${entryPoint}/**",filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "${batchEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "${chainEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "${metricsEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "/admin/**", filters: 'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "/login/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter'],
-	[pattern: "/logout/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
-	[pattern: "/test/testHook", filters: 'corsSecurityFilter,restAuthenticationFilter,contentTypeMarshallerFilter'],
-	[pattern: "/**", filters: 'corsSecurityFilter,restAuthenticationFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter']
+		[pattern: "${entryPoint}/**",filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
+		[pattern: "${batchEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
+		[pattern: "${chainEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
+		[pattern: "${metricsEntryPoint}/**", filters:'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
+		[pattern: "/admin/**", filters: 'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter'],
+		[pattern: "/test/testHook", filters: 'corsSecurityFilter,restAuthenticationFilter,contentTypeMarshallerFilter'],
+		[pattern: "/login/**", filters: 'corsSecurityFilter,restAuthenticationFilter'],
+		[pattern: "/logout/**", filters: 'corsSecurityFilter,restAuthenticationFilter'],
+		[pattern: "/api/login", filters: 'corsSecurityFilter,restAuthenticationFilter'],
+		[pattern: "/api/**", filters: 'restAuthenticationFilter'],
+		[pattern: "/**", filters: 'corsSecurityFilter,tokenCacheValidationFilter,contentTypeMarshallerFilter,restAuthenticationFilter']
 ]
 
 grails.plugin.springsecurity.interceptUrlMap = [
-        [pattern:"/api/**",            	access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
-	[pattern:"/${entryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
-        [pattern:"/${batchEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
-        [pattern:"/${chainEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
-        [pattern:"/${metricsEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
-        [pattern:"/${domainEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
-        [pattern:'/',                   access:['permitAll']],
-        [pattern:'/error',              access:['permitAll']],
-        [pattern:'/error/**',           access:['permitAll']],
-        [pattern:'/index',              access:['permitAll']],
-        [pattern:'/index.gsp',          access:['permitAll']],
-        [pattern:'/assets/**',          access:['permitAll']],
-	[pattern:'/login',              access:["permitAll"]],
-	[pattern:'/login/**',           access:["permitAll"]],
-	[pattern:'/logout',             access:["permitAll"]],
-	[pattern:'/logout/**',          access:["permitAll"]],
-	[pattern:'/admin',              access:["permitAll"]],
-	[pattern:'/admin/**',           access:["permitAll"]],
-	[pattern:'/test/testHook',      access:["permitAll"]]
+		[pattern:"/api/**",            	access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
+		[pattern:"/${entryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
+		[pattern:"/${batchEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
+		[pattern:"/${chainEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
+		[pattern:"/${metricsEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
+		[pattern:"/${domainEntryPoint}/**",   access:["permitAll && \"{'GET','PUT','POST','DELETE','OPTIONS'}\".contains(request.getMethod())"]],
+		[pattern:'/',                   access:['permitAll']],
+		[pattern:'/error',              access:['permitAll']],
+		[pattern:'/error/**',           access:['permitAll']],
+		[pattern:'/index',              access:['permitAll']],
+		[pattern:'/index.gsp',          access:['permitAll']],
+		[pattern:'/assets/**',          access:['permitAll']],
+		[pattern:'/login',              access:["permitAll"]],
+		[pattern:'/login/**',           access:["permitAll"]],
+		[pattern:'/logout',             access:["permitAll"]],
+		[pattern:'/logout/**',          access:["permitAll"]],
+		[pattern:'/admin',              access:["permitAll"]],
+		[pattern:'/admin/**',           access:["permitAll"]],
+		[pattern:'/test/testHook',      access:["permitAll"]]
 ]
 
 

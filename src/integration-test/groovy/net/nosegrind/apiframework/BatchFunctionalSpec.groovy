@@ -62,7 +62,7 @@ class BatchFunctionalSpec extends Specification {
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
             Integer version = cache['cacheversion']
-        
+
 
             String action = 'create'
             String data = "{'combine':true,'batch': [{'name': 'test1'},{'name': 'test2'},{'name': 'test3'},{'name': 'test4'},{'name': 'test5'},{'name': 'test6'}]}"

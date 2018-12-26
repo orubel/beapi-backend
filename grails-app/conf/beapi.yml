@@ -20,7 +20,7 @@ spring:
 ---
 grails:
     cors:
-        enabled: true
+        enabled: false
     mime:
         disable:
             accept:
@@ -257,9 +257,9 @@ apitoolkit:
     webhook:
         services: ['iostate']
     corsInterceptor:
-        includeEnvironments: ['development','test']
-        excludeEnvironments: ['production']
-        allowedOrigins: ['http://localhost','http://localhost:8080','localhost','127.0.0.1']
+      includeEnvironments: ['development','test','production']
+      excludeEnvironments: ['']
+      allowedOrigins: ['http://localhost','http://localhost:8080','http://127.0.0.1','http://localhost/','http://localhost:8080/','http://127.0.0.1/']
 
 ---
 server:
