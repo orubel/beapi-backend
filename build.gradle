@@ -1,3 +1,5 @@
+import org.grails.gradle.plugin.commands.*
+
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
@@ -41,6 +43,12 @@ apply plugin: "org.grails.grails-web"
 
 
 //apply plugin: "org.grails.grails-gsp"
+
+
+task generateIostateCommand(type: ApplicationContextCommandTask) {
+    classpath =  project.sourceSets.main.runtimeClasspath + project.configurations.console
+    command = "generate-iostate"
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
