@@ -38,6 +38,7 @@ class GenerateIostateCommand implements ApplicationCommand {
 
         // GET BINDING VARIABLES
         def domains = Holders.grailsApplication.getArtefacts("Domain")
+        println "### Bootstrapping IOState Files ..."
         domains.each(){ it ->
             String logicalName = it.getLogicalPropertyName()
             String packageName = it.getPackageName()
@@ -196,6 +197,7 @@ class GenerateIostateCommand implements ApplicationCommand {
                 //println(uris)
             }
             if(logicalName.length()>0 && values.length()>0 && uris.length()>1) {
+
                 createTemplate(iostateDir, realName, logicalName, values, uris)
             }
         }
@@ -256,6 +258,7 @@ class GenerateIostateCommand implements ApplicationCommand {
 
     private void createTemplate(String iostateDir, String realName, String logicalName, String values, String uris){
         // MAKE SURE DIRECTORY EXISTS
+
         String userHome = System.properties['user.home']
         iostateDir = userHome + "/" + iostateDir
 
@@ -287,15 +290,15 @@ class GenerateIostateCommand implements ApplicationCommand {
 
                 String path = iostateDir+"/${realName}.json" as String
                 File iostateFile = new File(path)
+                if (!iostateFile.exists()) {
+                    println(iostateDir + "/${realName}.json")
 
-println(iostateDir+"/${realName}.json")
-
-                FileOutputStream is = new FileOutputStream(iostateFile)
-                OutputStreamWriter osw = new OutputStreamWriter(is)
-                Writer w = new BufferedWriter(osw)
-                w.write(template)
-                w.close()
-
+                    FileOutputStream is = new FileOutputStream(iostateFile)
+                    OutputStreamWriter osw = new OutputStreamWriter(is)
+                    Writer w = new BufferedWriter(osw)
+                    w.write(template)
+                    w.close()
+                }
             } catch (IOException e) {
                 println("Problem writing to the file ${path}")
             }
