@@ -171,6 +171,12 @@ task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
 }
 
+bootRun {
+    systemProperties = System.properties
+}
 
+generateIostateCommand {
+    systemProperties = System.properties
+}
 
 
