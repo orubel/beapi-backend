@@ -189,8 +189,6 @@ class ApiFunctionalSpec extends Specification {
                 v.each(){ it ->
                     if(it.keyType=='PRIMARY'){
                         id = info."${it.name}"
-                        println("currentId:" + this.currentId)
-                        println("id:" + id)
                     }
 
                 }

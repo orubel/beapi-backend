@@ -50,7 +50,7 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
             connector.setPort(8080)
             connector.setSecure(false)
             connector.setRedirectPort(8443)
-            //connector.addUpgradeProtocol(new Http2Protocol());
+            connector.addUpgradeProtocol(new Http2Protocol())
             return connector;
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed setting up Connector", ex)
