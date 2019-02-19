@@ -149,6 +149,7 @@ dependencies {
     compile('org.grails.plugins:spring-security-rest-gorm:2.0.0.M2'){
         exclude module: 'org.grails.plugins:spring-security-rest:2.0.0.M2'
     }
+    provided group: 'com.google.guava', name: 'guava', version: '14.0'
 
     /**
      * Test Block
