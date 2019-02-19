@@ -31,7 +31,12 @@ class PersonController{
 
 	LinkedHashMap show(){
 		try{
-			Person user = (isSuperuser())?Person.get(params?.id?.toLong()):Person.get(springSecurityService.principal.id)
+			Person user = new Person()
+			if(isSuperuser()){
+				user = Person.get(params?.id?.toLong())
+			}else{
+				user = Person.get(springSecurityService.principal.id)
+			}
 			if(user){
 				return [person: user]
 			}else{

@@ -1,24 +1,5 @@
 ---
 grails:
-    controllers:
-        upload:
-            maxFileSize: 26214400
-            maxRequestSize: 26214400
-    profile: web-plugin
-    codegen:
-        defaultPackage: grails.api.framework
-info:
-    app:
-        name: '@info.app.name@'
-        version: 0.1
-        grailsVersion: '@info.app.grailsVersion@'
-spring:
-    groovy:
-        template:
-            check-template-location: false
-
----
-grails:
     cors:
         enabled: false
     mime:
@@ -56,7 +37,9 @@ grails:
         cache:
             maxsize: 1000
     controllers:
-        defaultScope: singleton
+        upload:
+            maxFileSize: 26214400
+            maxRequestSize: 26214400
     converters:
         encoding: UTF-8
     views:
@@ -70,222 +53,19 @@ grails:
                 scriptlets: html
                 taglib: none
                 staticparts: none
-    tomcat:
-        jvmArgs:
-            -'-Xms1024m'
-            -'-Xmx2048m'
-            -'-XX:MaxPermSize=128m'
-            -'-XX:ParallelGCThreads=2'
-            -'-XX:+CMSClassUnloadingEnabled'
-            -'-XX:+UseConcMarkSweepGC'
-            -'-XX:+CMSIncrementalMode'
-            -'-XX:+CMSIncrementalPacing'
-            -'-XX:CMSIncrementalDutyCycle=10'
-            -'-XX:+UseParNewGC'
-            -'-XX:MaxGCPauseMillis=50'
-            -'-XX:MaxGCMinorPauseMillis=50'
-            -'-server'
-hibernate:
-    flush:
-        mode: COMMIT
-    cache:
-        use_second_level_cache: true
-        use_query_cache: true
-        provider_class: 'org.hibernate.cache.EhCacheProvider'
-        region.factory_class: 'org.hibernate.cache.ehcache.EhCacheRegionFactory'
 
-quartz:
-    autoStartup: true
-
-environments:
-    test:
-        server:
-            context-path: ''
-            port: 8080
-        grails:
-            serverURL: "http://test.nosegrind.net"
-    development:
-        server:
-            context-path: ''
-            port: 8080
-        grails:
-            serverURL: "http://test.nosegrind.net"
-    production:
-        server:
-            context-path: ''
-            port: 8080
-        grails:
-            serverURL: "http://test.nosegrind.net"
-
----
-environments:
-    test:
-        webhookActive: false
-        apiThrottle: false
-        postProcess: false
-        iostate:
-            preloadDir: '.beapi/.iostate'
-            archInstanceUrls:
-                proxy: "127.0.0.1"
-                mq: "127.0.0.1"
-        dataSource:
-            pooled: true
-            jmxExport: true
-            driverClassName: "com.mysql.jdbc.Driver"
-            dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
-            username: "root"
-            password: "password"
-            # dbCreate: "create-drop"
-            url: "jdbc:mysql://localhost:3306/testdb"
-            dbCreate: update
-            properties:
-                   jmxEnabled: true
-                   initialSize: 5
-                   maxActive: 50
-                   minIdle: 5
-                   maxIdle: 25
-                   maxWait: 10000
-                   maxAge: 600000
-                   timeBetweenEvictionRunsMillis: 5000
-                   minEvictableIdleTimeMillis: 60000
-                   validationQuery: "SELECT 1"
-                   validationQueryTimeout: 3
-                   validationInterval: 15000
-                   testOnBorrow: true
-                   testWhileIdle: true
-                   testOnReturn: false
-                   jdbcInterceptors: "ConnectionState"
-                   defaultTransactionIsolation: 2 # "java.sql.Connection.TRANSACTION_READ_COMMITTED"
-    development:
-        webhookActive: false
-        apiThrottle: false
-        postProcess: false
-        iostate:
-            preloadDir: '.beapi/.iostate'
-            archInstanceUrls:
-                proxy: "127.0.0.1"
-                mq: "127.0.0.1"
-        dataSource:
-            pooled: true
-            jmxExport: true
-            driverClassName: "com.mysql.jdbc.Driver"
-            dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
-            username: "root"
-            password: "password"
-            # dbCreate: "create-drop"
-            url: "jdbc:mysql://localhost:3306/testdb"
-            dbCreate: update
-            properties:
-                   jmxEnabled: true
-                   initialSize: 5
-                   maxActive: 50
-                   minIdle: 5
-                   maxIdle: 25
-                   maxWait: 10000
-                   maxAge: 600000
-                   timeBetweenEvictionRunsMillis: 5000
-                   minEvictableIdleTimeMillis: 60000
-                   validationQuery: "SELECT 1"
-                   validationQueryTimeout: 3
-                   validationInterval: 15000
-                   testOnBorrow: true
-                   testWhileIdle: true
-                   testOnReturn: false
-                   jdbcInterceptors: "ConnectionState"
-                   defaultTransactionIsolation: 2 # "java.sql.Connection.TRANSACTION_READ_COMMITTED"
-    production:
-        apiThrottle: true
-        iostate:
-            preloadDir: '.beapi/.iostate'
-            archInstanceUrls:
-                proxy: "127.0.0.1"
-                mq: "127.0.0.1"
-        dataSource:
-            pooled: true
-            jmxExport: true
-            driverClassName: "com.mysql.jdbc.Driver"
-            dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
-            username: "root"
-            password: "password"
-            # dbCreate: "create-drop"
-            url: "jdbc:mysql://localhost:3306/testdb"
-            dbCreate: update
-            properties:
-                   jmxEnabled: true
-                   initialSize: 5
-                   maxActive: 50
-                   minIdle: 5
-                   maxIdle: 25
-                   maxWait: 10000
-                   maxAge: 600000
-                   timeBetweenEvictionRunsMillis: 5000
-                   minEvictableIdleTimeMillis: 60000
-                   validationQuery: "SELECT 1"
-                   validationQueryTimeout: 3
-                   validationInterval: 15000
-                   testOnBorrow: true
-                   testWhileIdle: true
-                   testOnReturn: false
-                   jdbcInterceptors: "ConnectionState"
-                   defaultTransactionIsolation: 2 # "java.sql.Connection.TRANSACTION_READ_COMMITTED"
----
-apitoolkit:
-    apiName: api
-    attempts: 5
-    procCores: 8
-    roles: ['ROLE_USER','ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
-    views: ['admin','apidoc','api','login','logout']
-    apichain:
-        limit: 3
-    rest:
-        postcrement: false
-    chaining:
-        enabled: true
-    batching:
-        enabled: true
-    encoding: UTF-8
-    throttle:
-        rateLimit: {'ROLE_USER':1000,'ROLE_ADMIN':10000}
-        dataLimit: {'ROLE_USER':1000000,'ROLE_ADMIN':1000000}
-        # in seconds : 3600 = 60 minutes
-        expires: 3600
-    user:
-        roles: ['ROLE_USER']
-    admin:
-        roles: ['ROLE_ROOT','ROLE_ADMIN','ROLE_ARCH']
-    serverType: master
-    webhook:
-        services: ['iostate']
-    corsInterceptor:
-      includeEnvironments: ['development','test','production']
-      excludeEnvironments: ['']
-      allowedOrigins: ['http://localhost','http://localhost:8080','http://127.0.0.1','http://localhost/','http://localhost:8080/','http://127.0.0.1/']
-
----
-server:
-    tomcat:
-        backgroundProcessorDelay: 10
-        maxThreads: 500
-        uriEncoding: UTF-8
-        compression: off
-        compressableMimeTypes: application/json,text/json,application/xml,text/xml,text/plain
-    use-forward-headers: true
-    port: 8443                                  # The port to listen on
-    ssl:
-        enabled: true                           # Activate HTTPS mode on the server port
-        keyStore: /home/orubel/.ssh/selfsigned.jks         # e.g. /etc/tomcat7/keystore/tomcat.keystore
-        keyStorePassword: password      # e.g. changeit
-        keyAlias: tomcat                   # e.g. tomcat
-
----
-root:
-    login: admin
-    password: Al1c3Inj@1L
-    email: owenr@uw.edu
-perf:
-    url: 'http://perf-scidmz-data.cac.washington.edu/esmond/perfsonar/archive/?format=json&limit=100000000'
-
-
+    profile: web-plugin
+    codegen:
+        defaultPackage: grails.api.framework
+info:
+    app:
+        name: '@info.app.name@'
+        version: 0.1
+        grailsVersion: '@info.app.grailsVersion@'
+spring:
+    groovy:
+        template:
+            check-template-location: false
 
 
 
