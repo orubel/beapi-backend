@@ -49,8 +49,6 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
             connector.setScheme("http")
             connector.setPort(8080)
             connector.setSecure(false)
-            connector.setAttribute("maxThreads", 500)
-            connector.setAttribute("maxConnections", 500)
             connector.setRedirectPort(8443)
             connector.addUpgradeProtocol(new Http2Protocol())
             return connector;
@@ -72,9 +70,8 @@ trait ExternalConfig implements EnvironmentAware {
         String encoding = environment.getProperty('grails.config.encoding', String, 'UTF-8')
 
         if (locations) {
-            println(locations)
-            locations.reverse().each { location ->
 
+            locations.reverse().each { location ->
                 String finalLocation = location.toString()
                 // Replace ~ with value from system property 'user.home' if set
                 String userHome = System.properties.getProperty('user.home')
@@ -86,7 +83,6 @@ trait ExternalConfig implements EnvironmentAware {
                 Resource resource = defaultResourceLoader.getResource(finalLocation) as Resource
 
                 if(resource.exists()) {
-                    println(resource.filename)
                     if (finalLocation.endsWith('.groovy')) {
                         String configText = resource.inputStream.getText(encoding)
                         Map properties = configText ? new ConfigSlurper(grails.util.Environment.current.name).parse(configText)?.flatten() : [:]
