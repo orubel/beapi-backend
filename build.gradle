@@ -15,7 +15,7 @@ buildscript {
         // for installing local
         maven { url "${System.getProperty('user.home')}/.m2/repository" }
         // bintray
-        maven { url "http://dl.bintray.com/nosegrind/plugins" }
+        maven { url "http://dl.bintray.com/orubel/plugins" }
         jcenter {
             url "http://jcenter.bintray.com/"
         }
