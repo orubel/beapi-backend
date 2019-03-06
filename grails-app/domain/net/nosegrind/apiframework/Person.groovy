@@ -119,6 +119,6 @@ class Person implements Serializable{
 	static mapping = {
 		//datasource 'user'
 		password column: '`password`'
-		cache true
+		//cache true
 	}
 }

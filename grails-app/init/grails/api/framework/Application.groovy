@@ -26,6 +26,13 @@ import groovy.util.ConfigSlurper
 
 import org.apache.coyote.http2.Http2Protocol
 
+import org.apache.tomcat.jdbc.pool.DataSource
+
+import org.h2.tools.Server
+import java.sql.Connection
+import java.sql.DriverManager
+
+
 @EnableAutoConfiguration(exclude = [SecurityFilterAutoConfiguration,JtaAutoConfiguration])
 class Application extends GrailsAutoConfiguration implements EnvironmentAware,ExternalConfig {
 
@@ -51,12 +58,40 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
             connector.setSecure(false)
             connector.setRedirectPort(8443)
             connector.addUpgradeProtocol(new Http2Protocol())
-            return connector;
+            return connector
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed setting up Connector", ex)
         }
     }
 
+
+    @Bean
+    public DataSource dataSource() {
+        DataSource dataSource = new DataSource(); // org.apache.tomcat.jdbc.pool.DataSource;
+        dataSource.setDriverClassName("org.h2.Driver")
+        dataSource.setUrl("jdbc:h2:tcp://localhost:9092/mem:rateLimitDB")
+        dataSource.setUsername('sa')
+        dataSource.setPassword('sa')
+        dataSource.setName("Throttle")
+        startDatabase()
+        return dataSource
+    }
+
+    static void startDatabase() {
+        Server server = null
+        try {
+            server = org.h2.tools.Server.createTcpServer("-tcpPort", "9092", "-tcpAllowOthers").start()
+            if (server.isRunning(true)) {
+                Class.forName("org.h2.Driver")
+                Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost:9092/mem:rateLimitDB", "sa", "sa");
+                println("Connection Established: " + conn.getMetaData().getDatabaseProductName() + "/" + conn.getCatalog())
+            } else {
+                println("H2 server not running")
+            }
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
+    }
 }
 
 trait ExternalConfig implements EnvironmentAware {

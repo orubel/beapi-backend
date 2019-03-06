@@ -9,7 +9,7 @@ class AuthenticationToken implements Serializable{
     String username
 
     static mapping = {
-        cache true
+        //cache true
         version false
     }
 
