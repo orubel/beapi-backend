@@ -40,6 +40,15 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
 
     static void main(String[] args) {
         GrailsApp.run(Application, args)
+
+        startDatabase()
+
+        // Bootstrap database
+        String userHome = System.getProperty('user.home')
+        String filePath = userHome + "/.beapi/"
+        String H2sql = new File(filePath+'beapi_h2.sql').text
+        def sql = Sql.newInstance('jdbc:h2:tcp://localhost/mem:rateLimitDB;MVCC=TRUE', 'sa', 'sa', 'org.h2.Driver')
+        sql.execute(H2sql)
     }
 
     // Add secondary connector for port 8080
@@ -64,28 +73,6 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed setting up Connector", ex)
         }
-    }
-
-
-    @Bean
-    public DataSource dataSource() {
-        DataSource dataSource = new DataSource(); // org.apache.tomcat.jdbc.pool.DataSource;
-        dataSource.setDriverClassName("org.h2.Driver")
-        dataSource.setUrl("jdbc:h2:tcp://localhost:9092/mem:rateLimitDB")
-        dataSource.setUsername('sa')
-        dataSource.setPassword('sa')
-        //dataSource.setName("Throttle")
-
-        startDatabase()
-
-        // Bootstrap database
-        String userHome = System.getProperty('user.home')
-        String filePath = userHome + "/.beapi/"
-        String H2sql = new File(filePath+'beapi_h2.sql').text
-        def sql = Sql.newInstance('jdbc:h2:tcp://localhost/mem:rateLimitDB;MVCC=TRUE', 'sa', 'sa', 'org.h2.Driver')
-        sql.execute(H2sql)
-
-        return dataSource
     }
 
     static void startDatabase() {
