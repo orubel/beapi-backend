@@ -31,10 +31,12 @@ import org.apache.tomcat.jdbc.pool.DataSource
 import org.h2.tools.Server
 import java.sql.Connection
 import java.sql.DriverManager
+import groovy.sql.Sql
 
 
 @EnableAutoConfiguration(exclude = [SecurityFilterAutoConfiguration,JtaAutoConfiguration])
 class Application extends GrailsAutoConfiguration implements EnvironmentAware,ExternalConfig {
+
 
     static void main(String[] args) {
         GrailsApp.run(Application, args)
@@ -74,6 +76,13 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
         dataSource.setPassword('sa')
         dataSource.setName("Throttle")
         startDatabase()
+
+        String userHome = System.getProperty('user.home')
+        String filePath = userHome + "/.beapi/"
+        String H2sql = new File(filePath+'beapi_h2.sql').text
+        def sqlGlobal = Sql.newInstance('jdbc:h2:tcp://localhost/mem:bytewheels;MVCC=TRUE', 'sa', '', 'org.h2.Driver')
+        sqlGlobal.execute(H2sql)
+
         return dataSource
     }
 
