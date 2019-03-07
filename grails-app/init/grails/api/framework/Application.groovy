@@ -74,14 +74,16 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
         dataSource.setUrl("jdbc:h2:tcp://localhost:9092/mem:rateLimitDB")
         dataSource.setUsername('sa')
         dataSource.setPassword('sa')
-        dataSource.setName("Throttle")
+        //dataSource.setName("Throttle")
+
         startDatabase()
 
+        // Bootstrap database
         String userHome = System.getProperty('user.home')
         String filePath = userHome + "/.beapi/"
         String H2sql = new File(filePath+'beapi_h2.sql').text
-        def sqlGlobal = Sql.newInstance('jdbc:h2:tcp://localhost/mem:bytewheels;MVCC=TRUE', 'sa', '', 'org.h2.Driver')
-        sqlGlobal.execute(H2sql)
+        def sql = Sql.newInstance('jdbc:h2:tcp://localhost/mem:rateLimitDB;MVCC=TRUE', 'sa', 'sa', 'org.h2.Driver')
+        sql.execute(H2sql)
 
         return dataSource
     }

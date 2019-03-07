@@ -5,21 +5,15 @@
 import net.nosegrind.apiframework.Person
 import net.nosegrind.apiframework.Role
 import net.nosegrind.apiframework.PersonRole
-import org.h2.tools.Server
+import groovy.sql.Sql
 
 class BootStrap {
 
-    final String[] args = ["-tcpPort", "8092", "-tcpAllowOthers"]
-    Server server
     def passwordEncoder
     def grailsApplication
     def springSecurityService
 	
     def init = { servletContext ->
-        // Throttle
-        // only instantiate if this server is 'master'; check config value
-        server = Server.createTcpServer(args).start()
-
         def apitoolkit = grailsApplication.config.apitoolkit
 
         apitoolkit.roles.each { it ->
@@ -62,9 +56,11 @@ class BootStrap {
 
             status.isCompleted()
         }
+
+
     }
 
-    def destroy = {
-	server.stop()
-    }
+    def destroy = {}
+
+
 }
