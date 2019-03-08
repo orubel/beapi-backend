@@ -32,11 +32,17 @@ import org.h2.tools.Server
 import java.sql.Connection
 import java.sql.DriverManager
 import groovy.sql.Sql
+import grails.util.Environment
+import grails.util.Holders
 
+import org.springframework.core.env.*
 
 @EnableAutoConfiguration(exclude = [SecurityFilterAutoConfiguration,JtaAutoConfiguration])
-class Application extends GrailsAutoConfiguration implements EnvironmentAware,ExternalConfig {
+class Application extends GrailsAutoConfiguration implements EnvironmentAware {
 
+    static String cacheUrl
+    private ResourceLoader defaultResourceLoader = new DefaultResourceLoader()
+    private YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader()
 
     static void main(String[] args) {
         GrailsApp.run(Application, args)
@@ -47,7 +53,7 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
         String userHome = System.getProperty('user.home')
         String filePath = userHome + "/.beapi/"
         String H2sql = new File(filePath+'beapi_h2.sql').text
-        def sql = Sql.newInstance('jdbc:h2:tcp://localhost/mem:rateLimitDB;MVCC=TRUE', 'sa', 'sa', 'org.h2.Driver')
+        def sql = Sql.newInstance(this.cacheUrl, 'sa', 'sa', 'org.h2.Driver')
         sql.execute(H2sql)
     }
 
@@ -75,35 +81,29 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
         }
     }
 
-    static void startDatabase() {
+    static void startDatabase(String cacheUrl) {
+
         Server server = null
+
         try {
             server = org.h2.tools.Server.createTcpServer("-tcpPort", "9092", "-tcpAllowOthers").start()
             if (server.isRunning(true)) {
                 Class.forName("org.h2.Driver")
-                Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost:9092/mem:rateLimitDB", "sa", "sa");
+                Connection conn = DriverManager.getConnection(this.cacheUrl, "sa", "sa");
                 println("Connection Established: " + conn.getMetaData().getDatabaseProductName() + "/" + conn.getCatalog())
             } else {
                 println("H2 server not running")
             }
         } catch (Exception e) {
-            e.printStackTrace()
+            println(e)
         }
     }
-}
 
-trait ExternalConfig implements EnvironmentAware {
-
-    private ResourceLoader defaultResourceLoader = new DefaultResourceLoader()
-    private YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader()
-
-    @Override
-    void setEnvironment(Environment environment) {
+    void setEnvironment(org.springframework.core.env.Environment environment) {
         List locations = environment.getProperty('grails.config.locations', ArrayList, [])
         String encoding = environment.getProperty('grails.config.encoding', String, 'UTF-8')
 
         if (locations) {
-
             locations.reverse().each { location ->
                 String finalLocation = location.toString()
                 // Replace ~ with value from system property 'user.home' if set
@@ -130,10 +130,23 @@ trait ExternalConfig implements EnvironmentAware {
                 }else{
                     println("${finalLocation} does not exist")
                 }
-
             }
         }
 
-    }
+        String cacheUrl
+        switch (Environment.current) {
+            case Environment.DEVELOPMENT:
+                this.cacheUrl = environment.getProperty('localCache')
+                break
+            case Environment.TEST:
+                this.cacheUrl = environment.getProperty('localCache')
+                break
+            case Environment.PRODUCTION:
+                println("prod")
+                println(environment.getProperty('localCache'))
+                this.cacheUrl = environment.getProperty('localCache')
+                break
+        }
 
+    }
 }

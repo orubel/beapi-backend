@@ -18,6 +18,8 @@ grails:
 ---
 environments:
     test:
+        masterCache: "jdbc:h2:tcp://localhost/mem:rateLimitDB"
+        localCache: "jdbc:h2:tcp://localhost/mem:rateLimitDB"
         webhookActive: false
         apiThrottle: false
         postProcess: false
@@ -32,6 +34,8 @@ environments:
         grails:
             serverURL: "http://test.yourdomain.net:8080" #changeit
     development:
+        masterCache: "jdbc:h2:tcp://localhost/mem:rateLimitDB"
+        localCache: "jdbc:h2:tcp://localhost/mem:rateLimitDB"
         webhookActive: false
         apiThrottle: false
         postProcess: false
@@ -46,6 +50,8 @@ environments:
         grails:
             serverURL: "http://test.yourdomain.net:8080" #changeit
     production:
+        masterCache: "jdbc:h2:tcp://localhost/mem:rateLimitDB"
+        localCache: "jdbc:h2:tcp://localhost/mem:rateLimitDB"
         webhookActive: false
         apiThrottle: false
         postProcess: false
