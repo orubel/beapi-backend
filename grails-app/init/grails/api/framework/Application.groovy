@@ -40,7 +40,10 @@ import org.springframework.core.env.*
 @EnableAutoConfiguration(exclude = [SecurityFilterAutoConfiguration,JtaAutoConfiguration])
 class Application extends GrailsAutoConfiguration implements EnvironmentAware {
 
-    static String cacheUrl
+    static String localCache
+    static String localCacheUsername
+    static String localCachePassword
+
     private ResourceLoader defaultResourceLoader = new DefaultResourceLoader()
     private YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader()
 
@@ -53,7 +56,7 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware {
         String userHome = System.getProperty('user.home')
         String filePath = userHome + "/.beapi/"
         String H2sql = new File(filePath+'beapi_h2.sql').text
-        def sql = Sql.newInstance(this.cacheUrl, 'sa', 'sa', 'org.h2.Driver')
+        def sql = Sql.newInstance(this.localCache, 'sa', 'sa', 'org.h2.Driver')
         sql.execute(H2sql)
     }
 
@@ -89,7 +92,7 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware {
             server = org.h2.tools.Server.createTcpServer("-tcpPort", "9092", "-tcpAllowOthers").start()
             if (server.isRunning(true)) {
                 Class.forName("org.h2.Driver")
-                Connection conn = DriverManager.getConnection(this.cacheUrl, "sa", "sa");
+                Connection conn = DriverManager.getConnection(this.localCache, "sa", "sa");
                 println("Connection Established: " + conn.getMetaData().getDatabaseProductName() + "/" + conn.getCatalog())
             } else {
                 println("H2 server not running")
@@ -133,20 +136,9 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware {
             }
         }
 
-        String cacheUrl
-        switch (Environment.current) {
-            case Environment.DEVELOPMENT:
-                this.cacheUrl = environment.getProperty('localCache')
-                break
-            case Environment.TEST:
-                this.cacheUrl = environment.getProperty('localCache')
-                break
-            case Environment.PRODUCTION:
-                println("prod")
-                println(environment.getProperty('localCache'))
-                this.cacheUrl = environment.getProperty('localCache')
-                break
-        }
+        this.localCache = environment.getProperty('localCache.url')
+        this.localCacheUsername = environment.getProperty('localCache.username')
+        this.localCachePassword = environment.getProperty('localCache.password')
 
     }
 }
