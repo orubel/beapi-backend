@@ -70,21 +70,6 @@ repositories {
     }
 }
 
-//dependencyManagement {
-//    imports {
-//        mavenBom "org.grails:grails-bom:$grailsVersion"
-//    }
-//    applyMavenExclusions false
-//}
-
-bootRun {
-    systemProperties = System.properties
-}
-
-test {
-    systemProperties = System.properties
-}
-
 
 
 dependencies {
@@ -138,7 +123,7 @@ dependencies {
     //provided 'org.grails.plugins:hibernate:4.3.10.6'
     //provided "org.hibernate:hibernate-ehcache"
     runtime 'mysql:mysql-connector-java:5.1.29'
-    provided("com.h2database:h2")
+
 
     /**
      * Security block
