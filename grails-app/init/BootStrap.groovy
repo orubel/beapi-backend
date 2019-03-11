@@ -5,7 +5,11 @@
 import net.nosegrind.apiframework.Person
 import net.nosegrind.apiframework.Role
 import net.nosegrind.apiframework.PersonRole
+<<<<<<< HEAD
 
+=======
+import groovy.sql.Sql
+>>>>>>> cc88b4edd72d6c5698146acc5474c202c81d7558
 
 class BootStrap {
 
@@ -14,10 +18,13 @@ class BootStrap {
     def springSecurityService
 	
     def init = { servletContext ->
+<<<<<<< HEAD
         // Throttle
         // only instantiate if this server is 'master'; check config value
 
 
+=======
+>>>>>>> cc88b4edd72d6c5698146acc5474c202c81d7558
         def apitoolkit = grailsApplication.config.apitoolkit
 
         apitoolkit.roles.each { it ->
@@ -60,7 +67,15 @@ class BootStrap {
 
             status.isCompleted()
         }
+
+<<<<<<< HEAD
+    def destroy = {}
+=======
+
     }
 
     def destroy = {}
+
+
+>>>>>>> cc88b4edd72d6c5698146acc5474c202c81d7558
 }

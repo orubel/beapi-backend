@@ -26,11 +26,38 @@ import groovy.util.ConfigSlurper
 
 import org.apache.coyote.http2.Http2Protocol
 
+import org.apache.tomcat.jdbc.pool.DataSource
+
+import org.h2.tools.Server
+import java.sql.Connection
+import java.sql.DriverManager
+import groovy.sql.Sql
+import grails.util.Environment
+import grails.util.Holders
+
+import org.springframework.core.env.*
+
 @EnableAutoConfiguration(exclude = [SecurityFilterAutoConfiguration,JtaAutoConfiguration])
-class Application extends GrailsAutoConfiguration implements EnvironmentAware,ExternalConfig {
+class Application extends GrailsAutoConfiguration implements EnvironmentAware {
+
+    static String localCache
+    static String localCacheUsername
+    static String localCachePassword
+
+    private ResourceLoader defaultResourceLoader = new DefaultResourceLoader()
+    private YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader()
 
     static void main(String[] args) {
         GrailsApp.run(Application, args)
+
+        startDatabase()
+
+        // Bootstrap database
+        String userHome = System.getProperty('user.home')
+        String filePath = userHome + "/.beapi/"
+        String H2sql = new File(filePath+'beapi_h2.sql').text
+        def sql = Sql.newInstance(this.localCache, 'sa', 'sa', 'org.h2.Driver')
+        sql.execute(H2sql)
     }
 
     // Add secondary connector for port 8080
@@ -51,26 +78,35 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
             connector.setSecure(false)
             connector.setRedirectPort(8443)
             connector.addUpgradeProtocol(new Http2Protocol())
-            return connector;
+            return connector
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed setting up Connector", ex)
         }
     }
 
-}
+    static void startDatabase(String cacheUrl) {
 
-trait ExternalConfig implements EnvironmentAware {
+        Server server = null
 
-    private ResourceLoader defaultResourceLoader = new DefaultResourceLoader()
-    private YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader()
+        try {
+            server = org.h2.tools.Server.createTcpServer("-tcpPort", "9092", "-tcpAllowOthers").start()
+            if (server.isRunning(true)) {
+                Class.forName("org.h2.Driver")
+                Connection conn = DriverManager.getConnection(this.localCache, "sa", "sa");
+                println("Connection Established: " + conn.getMetaData().getDatabaseProductName() + "/" + conn.getCatalog())
+            } else {
+                println("H2 server not running")
+            }
+        } catch (Exception e) {
+            println(e)
+        }
+    }
 
-    @Override
-    void setEnvironment(Environment environment) {
+    void setEnvironment(org.springframework.core.env.Environment environment) {
         List locations = environment.getProperty('grails.config.locations', ArrayList, [])
         String encoding = environment.getProperty('grails.config.encoding', String, 'UTF-8')
 
         if (locations) {
-
             locations.reverse().each { location ->
                 String finalLocation = location.toString()
                 // Replace ~ with value from system property 'user.home' if set
@@ -97,10 +133,12 @@ trait ExternalConfig implements EnvironmentAware {
                 }else{
                     println("${finalLocation} does not exist")
                 }
-
             }
         }
 
-    }
+        this.localCache = environment.getProperty('localCache.url')
+        this.localCacheUsername = environment.getProperty('localCache.username')
+        this.localCachePassword = environment.getProperty('localCache.password')
 
+    }
 }

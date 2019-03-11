@@ -11,7 +11,7 @@ class AppToken implements Serializable {
 	}
 
 	static mapping = {
-		cache true
+		//cache true
 	}
 
 }

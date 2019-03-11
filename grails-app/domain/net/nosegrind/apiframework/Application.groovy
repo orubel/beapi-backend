@@ -12,7 +12,7 @@ class Application implements Serializable {
 	}
 
 	static mapping = {
-		cache true
+		//cache true
 	}
 
 }

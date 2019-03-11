@@ -21,7 +21,7 @@ class AcctPerson implements Serializable {
 	}
 
 	static mapping = {
-		cache true
+		//cache true
 		acct lazy:false
 		person lazy:false
 	}
