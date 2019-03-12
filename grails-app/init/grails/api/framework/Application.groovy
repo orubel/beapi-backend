@@ -26,17 +26,6 @@ import groovy.util.ConfigSlurper
 
 import org.apache.coyote.http2.Http2Protocol
 
-
-
-
-//import java.sql.Connection
-//import java.sql.DriverManager
-//import groovy.sql.Sql
-//import grails.util.Environment
-//import grails.util.Holders
-
-//import org.springframework.core.env.*
-
 @EnableAutoConfiguration(exclude = [SecurityFilterAutoConfiguration,JtaAutoConfiguration])
 class Application extends GrailsAutoConfiguration implements EnvironmentAware,ExternalConfig {
 
@@ -62,7 +51,7 @@ class Application extends GrailsAutoConfiguration implements EnvironmentAware,Ex
             connector.setSecure(false)
             connector.setRedirectPort(8443)
             connector.addUpgradeProtocol(new Http2Protocol())
-            return connector
+            return connector;
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed setting up Connector", ex)
         }
