@@ -4,7 +4,7 @@ class TestController {
 
     def springSecurityService
 
-    LinkedHashMap show(){
+    HashMap show(){
         try{
             Test test
             test = Test.get(params?.id?.toLong())
@@ -18,7 +18,7 @@ class TestController {
         }
     }
 
-    LinkedHashMap create(){
+    HashMap create(){
         println("testcontroller/create called...")
         try{
             Test test = new Test(name:"${params.name}")
@@ -31,7 +31,7 @@ class TestController {
         }
     }
 
-    LinkedHashMap delete() {
+    HashMap delete() {
         try {
             Test test
             test = Test.get(params?.id?.toLong())
@@ -48,7 +48,7 @@ class TestController {
         }
     }
 
-    LinkedHashMap testHook() {
+    HashMap testHook() {
         return [test:params]
     }
 
