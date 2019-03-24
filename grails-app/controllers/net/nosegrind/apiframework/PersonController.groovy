@@ -13,9 +13,7 @@ class PersonController{
 
 	java.lang.String value(){}
 
-	HashMap create(){
-		println("CREATE CALLED...")
-		println(params)
+	LinkedHashMap create(){
 		try{
 			Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
 
@@ -32,7 +30,7 @@ class PersonController{
 		}
 	}
 
-	HashMap show(){
+	LinkedHashMap show(){
 		try{
 			Person user = new Person()
 			if(isSuperuser()){
@@ -51,7 +49,7 @@ class PersonController{
 		}
     }
 
-	HashMap getByUsername(){
+	LinkedHashMap getByUsername(){
 		try{
 			Person user
 			user = Person.get(params?.username)
@@ -67,7 +65,7 @@ class PersonController{
 	}
 
 
-	HashMap delete() {
+	LinkedHashMap delete() {
 		Person user
 		try {
 			user = Person.get(params.id)
