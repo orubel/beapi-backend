@@ -11,9 +11,15 @@ grails:
             -'-XX:+CMSIncrementalPacing'
             -'-XX:CMSIncrementalDutyCycle=10'
             -'-XX:+UseParNewGC'
-            -'-XX:MaxGCPauseMillis=50'
-            -'-XX:MaxGCMinorPauseMillis=20'
+            -'-XX:MaxGCPauseMillis=200'
+            -'-XX:MaxGCMinorPauseMillis=10'
             -'-server'
+            -'-noverify'
+            -'-Xshare:off'
+            -'-Djava.net.preferIPv4Stack=true'
+            -'-XX:+EliminateLocks'
+            -'-XX:+UseBiasedLocking'
+
 
 ---
 environments:
