@@ -19,7 +19,6 @@ class TestController {
     }
 
     HashMap create(){
-        println("testcontroller/create called...")
         try{
             Test test = new Test(name:"${params.name}")
             if(!test.save(flush:true,failOnError:true)){
