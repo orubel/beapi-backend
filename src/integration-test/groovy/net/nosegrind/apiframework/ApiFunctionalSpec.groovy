@@ -70,7 +70,7 @@ class ApiFunctionalSpec extends Specification {
                 }
             }
             data += "}"
-
+        
             def info
 
             def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
@@ -106,7 +106,7 @@ class ApiFunctionalSpec extends Specification {
 
             Integer version = cache['cacheversion']
             String action = 'show'
-            String pkey = cache?."${version}"?."${action}".pkey[0]
+            //String pkey = cache?."${version}"?."${action}".pkey[0]
 
             def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
             proc.waitFor()
@@ -138,7 +138,7 @@ class ApiFunctionalSpec extends Specification {
 
         Integer version = cache['cacheversion']
         String action = 'show'
-        String pkey = cache?."${version}"?."${action}".pkey[0]
+        //String pkey = cache?."${version}"?."${action}".pkey[0]
 
         def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}-1/${this.controller}/show?id=${this.currentId}"].execute();
         proc.waitFor()
@@ -173,7 +173,7 @@ class ApiFunctionalSpec extends Specification {
 
             String action = 'show'
 
-            String pkey = cache?."${version}"?."${action}".pkey[0]
+            //String pkey = cache?."${version}"?."${action}".pkey[0]
 
             def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/list"].execute();
             proc.waitFor()
