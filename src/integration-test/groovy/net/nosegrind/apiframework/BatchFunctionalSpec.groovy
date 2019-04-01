@@ -72,6 +72,7 @@ class BatchFunctionalSpec extends Specification {
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
+
             info = new JsonSlurper().parseText(output)
 
         when:"info is not null"
@@ -141,8 +142,6 @@ class BatchFunctionalSpec extends Specification {
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
 
-            println("output:"+output)
-
             info = new JsonSlurper().parseText(output)
 
         when:"info is not null"
@@ -183,7 +182,7 @@ class BatchFunctionalSpec extends Specification {
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
-        println(output)
+
             info = new JsonSlurper().parseText(output)
 
         when:"info is not null"
