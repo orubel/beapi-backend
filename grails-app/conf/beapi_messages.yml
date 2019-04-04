@@ -1,0 +1,11 @@
+interceptor:
+    errorMsg:
+        checkRequestMethod: 'Expected request method for endpoint does not match sent method'
+        rateLimitExceeded: 'Rate Limit exceeded. Please wait'
+        checkURIDefinitions: 'Expected request variables for endpoint do not match sent variables'
+        checkAuth: 'Unauthorized Access attempted'
+        noResourceError: 'No resource returned; query was empty'
+
+---
+
+
