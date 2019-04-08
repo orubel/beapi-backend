@@ -66,8 +66,10 @@ environments:
 ---
 server:
     tomcat:
-        backgroundProcessorDelay: 10
-        maxThreads: 500
+        backgroundProcessorDelay: 5
+        maxThreads: 400
+        minSpareThreads: 100
+        maxConnections: 100000
         uriEncoding: UTF-8
         compression: off
         compressableMimeTypes: application/json,text/json,application/xml,text/xml,text/plain
