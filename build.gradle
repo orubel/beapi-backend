@@ -167,6 +167,11 @@ dependencies {
     }
     testCompile "org.grails:grails-datastore-rest-client:4.0.4.RELEASE"
     console "org.grails:grails-console"
+
+    /**
+     * Scheduling
+     */
+    compile 'org.grails.plugins:quartz:2.0.13'
 }
 
 task wrapper(type: Wrapper) {
