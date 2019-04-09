@@ -7,7 +7,6 @@ class Stat {
 	String uri
 	Long timestamp
 
-
 	static constraints = {
 		user nullable:false
 		code nullable:false
