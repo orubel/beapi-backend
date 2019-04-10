@@ -2,7 +2,7 @@ package net.nosegrind.apiframework
 
 class Stat {
 
-	Integer user
+	Long user
 	Integer code
 	String uri
 	Long timestamp
