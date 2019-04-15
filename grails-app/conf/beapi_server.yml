@@ -36,6 +36,8 @@ environments:
             port: 8080
         grails:
             serverURL: "http://test.yourdomain.net:8080" #changeit
+        quartz:
+            pluginEnabled: false
     development:
         webhookActive: false
         apiThrottle: false
