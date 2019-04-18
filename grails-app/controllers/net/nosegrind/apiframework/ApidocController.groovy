@@ -25,8 +25,8 @@ class ApidocController {
 				cache[version].each() { k, v ->
 
 					if (!['deprecated', 'defaultAction','currentStable'].contains(k)) {
-						if(!docs["${it}"] && cache[version][k]['roles'].contains(authority)){
-							docs["${it}"] =[:]
+						if(!docs["${it}"] && (cache[version][k]['roles'].contains(authority) || cache[version][k]['roles'].contains('permitAll'))){
+							docs["${it}"] = v['doc']
 						}
 					}
 				}
