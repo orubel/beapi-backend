@@ -143,8 +143,12 @@ dependencies {
     /**
      * Security block
      */
-    provided('org.grails.plugins:spring-security-core:3.2.0.M1')
-    compile('org.grails.plugins:spring-security-rest:2.0.0.M2')
+    provided('org.grails.plugins:spring-security-core:3.2.0.M1'){
+        exclude(module: 'org.grails.plugins:cors')
+    }
+    compile('org.grails.plugins:spring-security-rest:2.0.0.M2'){
+        exclude(module: 'org.grails.plugins:cors')
+    }
     // required by spring-security-rest for loginController/logoutController
     compile "org.grails:grails-plugin-rest"
     compile('org.grails.plugins:spring-security-rest-gorm:2.0.0.M2'){
