@@ -5,7 +5,7 @@ class PersonRoleController{
 
 	LinkedHashMap create(){
 		try{
-			PersonRole role = new PersonRole(person:"${params.id}",role:"${params.role}")
+			PersonRole role = new PersonRole(person:"${params.personId}",role:"${params.roleId}")
 
 			if(role){
 				if(!role.save(flush:true,failOnError:true)){
@@ -23,7 +23,7 @@ class PersonRoleController{
 	LinkedHashMap showByPerson(){
 		try{
 			PersonRole role = new PersonRole()
-			role = PersonRole.get(params?.id?.toLong())
+			role = PersonRole.findByPerson(params?.personId?.toLong())
 
 			if(role){
 				return [personrole:role]
@@ -38,7 +38,7 @@ class PersonRoleController{
 	LinkedHashMap showByRole(){
 		try{
 			PersonRole role = new PersonRole()
-			role = PersonRole.get(params?.id?.toLong())
+			role = PersonRole.findByRole(params?.roleId?.toLong())
 
 			if(role){
 				return [personrole:role]
@@ -53,12 +53,17 @@ class PersonRoleController{
 	LinkedHashMap delete() {
 		PersonRole role
 		try {
-			role = PersonRole.get(params.id)
-			if(role){
-				role.delete(flush: true, failOnError: true)
-				return [personrole: [id:params.id.toLong()]]
+			Person person = Person.get(params.personId)
+			if (person) {
+				role = PersonRole.findByPerson(person)
+				if (role) {
+					role.delete(flush: true, failOnError: true)
+					return [personRole: [personId: params.personId.toLong()]]
+				} else {
+					render(status: 500, text: "No roles exists for given ID of '" +  params.personId + "' in database.")
+				}
 			}else{
-				render(status: 500,text:"Id " + params.id + " does not match record in database.")
+				render(status: 500, text: "Id " + params.personId + " does not match record in database.")
 			}
 		}catch(Exception e){
 			throw new Exception("[PersonRoleController : delete] : Exception - full stack trace follows:",e)
