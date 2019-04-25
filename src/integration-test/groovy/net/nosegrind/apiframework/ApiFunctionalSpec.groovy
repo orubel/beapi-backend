@@ -122,7 +122,6 @@ class ApiFunctionalSpec extends Specification {
             ArrayList response2 = stdErr[1].split("< ")
 
             String method
-            String errMsg
 
             response2.each(){
                 def temp = it.split(' ')
@@ -132,7 +131,7 @@ class ApiFunctionalSpec extends Specification {
                         break
                 }
             }
-        println("###ERR:"+errMsg+"###")
+
         when:"all values returned"
             assert outputStream.toString()==""
         then:"bad method sent"
@@ -161,7 +160,6 @@ class ApiFunctionalSpec extends Specification {
             ArrayList response2 = stdErr[1].split("< ")
 
             String method
-            String errMsg
 
             response2.each(){
                 def temp = it.split(' ')
@@ -171,13 +169,49 @@ class ApiFunctionalSpec extends Specification {
                         break
                 }
             }
-        println("###ERR:"+errMsg+"###")
         when:"all values returned"
             assert outputStream.toString()==""
         then:"bad method sent"
             assert method == '400'
     }
 
+    void "Testing Bad Token with Bad Variables"() {
+        setup:"api is called"
+            String METHOD = "GET"
+            LinkedHashMap info = [:]
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+
+            Integer version = cache['cacheversion']
+            String action = 'show'
+
+            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer 1234567890","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
+            proc.waitFor()
+            def outputStream = new StringBuffer()
+            def error = new StringWriter()
+            proc.waitForProcessOutput(outputStream, error)
+
+            ArrayList stdErr = error.toString().split( '> \n' )
+            ArrayList response1 = stdErr[0].split("> ")
+            ArrayList response2 = stdErr[1].split("< ")
+
+            String method
+            response2.each(){
+                def temp = it.split(' ')
+                switch(temp[0]){
+                    case 'HTTP/1.1':
+                        method = temp[1]
+                        break
+                }
+            }
+        when:"all values returned"
+            assert outputStream.toString()==""
+        then:"bad method sent"
+            assert method == '401'
+    }
+
+    // test checkAuth
+    
     /**
      * Regular Calls
      */
