@@ -13,22 +13,6 @@ class PersonController{
 
 	java.lang.String value(){}
 
-	LinkedHashMap create(){
-		try{
-			Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
-
-			if(user){
-				if(!user.save(flush:true,failOnError:true)){
-					user.errors.allErrors.each { println(it) }
-				}
-				return [person:user]
-			}else{
-				render(status: 500,text:"Id does not match record in database.")
-			}
-		}catch(Exception e){
-			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
-		}
-	}
 
 	LinkedHashMap show(){
 		try{
@@ -49,6 +33,48 @@ class PersonController{
 		}
     }
 
+	LinkedHashMap create(){
+		try{
+			Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
+
+			if(user){
+				if(!user.save(flush:true,failOnError:true)){
+					user.errors.allErrors.each { println(it) }
+				}
+				return [person:user]
+			}else{
+				render(status: 500,text:"Id does not match record in database.")
+			}
+		}catch(Exception e){
+			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
+		}
+	}
+
+	LinkedHashMap update(){
+		try{
+			Person user = new Person()
+			if(isSuperuser()){
+				user = Person.get(params?.id?.toLong())
+			}else{
+				user = Person.get(springSecurityService.principal.id)
+			}
+			if(user){
+				user.username = params.username
+				user.password = params.password
+				user.email = params.email
+
+				if(!user.save(flush:true,failOnError:true)){
+					user.errors.allErrors.each { println(it) }
+				}
+				return [person:user]
+			}else{
+				render(status: 500,text:"Id does not match record in database.")
+			}
+		}catch(Exception e){
+			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
+		}
+	}
+
 	LinkedHashMap getByUsername(){
 		try{
 			Person user
@@ -68,9 +94,20 @@ class PersonController{
 	LinkedHashMap delete() {
 		Person user
 		try {
-			user = Person.get(params.id)
+			if(isSuperuser()){
+				user = Person.get(params?.id?.toLong())
+			}else{
+				user = Person.get(springSecurityService.principal.id)
+			}
 			if(user){
-				user.delete(flush: true, failOnError: true)
+				user.enabled=false
+				user.accountExpired=true
+				user.accountLocked=true
+				user.passwordExpired=true
+				//user.delete(flush: true, failOnError: true)
+				if(!user.save(flush:true,failOnError:true)){
+					user.errors.allErrors.each { println(it) }
+				}
 				return [person: [id:params.id.toLong()]]
 			}else{
 				render(status: 500,text:"Id " + params.id + " does not match record in database.")
