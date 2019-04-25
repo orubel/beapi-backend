@@ -211,7 +211,7 @@ class ApiFunctionalSpec extends Specification {
     }
 
     // test checkAuth
-    
+
     /**
      * Regular Calls
      */
