@@ -96,7 +96,7 @@ class ApiFunctionalSpec extends Specification {
                 }
             }
     }
-    
+
 
     /**
      * Regular Calls

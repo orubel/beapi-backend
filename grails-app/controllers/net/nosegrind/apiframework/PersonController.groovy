@@ -18,7 +18,8 @@ class PersonController{
 		try{
 			Person user = new Person()
 			if(isSuperuser()){
-				user = Person.get(params?.id?.toLong())
+				user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
+
 			}else{
 				user = Person.get(springSecurityService.principal.id)
 			}
@@ -54,7 +55,7 @@ class PersonController{
 		try{
 			Person user = new Person()
 			if(isSuperuser()){
-				user = Person.get(params?.id?.toLong())
+				user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
 			}else{
 				user = Person.get(springSecurityService.principal.id)
 			}
@@ -78,7 +79,7 @@ class PersonController{
 	LinkedHashMap getByUsername(){
 		try{
 			Person user
-			user = Person.get(params?.username)
+			user = Person.findWhere(username: "params?.username", enabled: true)
 			if(user){
 				return [person: user]
 			}else{
@@ -91,7 +92,7 @@ class PersonController{
 	}
 
 
-	LinkedHashMap delete() {
+	LinkedHashMap disable() {
 		Person user
 		try {
 			if(isSuperuser()){
@@ -108,6 +109,28 @@ class PersonController{
 				if(!user.save(flush:true,failOnError:true)){
 					user.errors.allErrors.each { println(it) }
 				}
+				return [person: [id:params.id.toLong()]]
+			}else{
+				render(status: 500,text:"Id " + params.id + " does not match record in database.")
+			}
+		}catch(Exception e){
+			throw new Exception("[PersonController : disable] : Exception - full stack trace follows:",e)
+		}
+	}
+
+	LinkedHashMap delete() {
+		Person user
+		List prole
+		try {
+			user = Person.get(params.id)
+			if(user){
+				prole = PersonRole.findAllByPerson(user)
+				prole.each(){
+					println(it.getClass())
+					it.delete(flush: true, failOnError: true)
+				}
+				//prole.delete(flush: true, failOnError: true)
+				user.delete(flush: true, failOnError: true)
 				return [person: [id:params.id.toLong()]]
 			}else{
 				render(status: 500,text:"Id " + params.id + " does not match record in database.")
