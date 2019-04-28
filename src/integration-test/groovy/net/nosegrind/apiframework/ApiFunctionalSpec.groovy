@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext
 import net.nosegrind.apiframework.ApiCacheService
 import grails.util.Metadata
 
+import net.nosegrind.apiframework.Person
 
 /**
  * See http://www.gebish.org/manual/current/ for more instructions
@@ -35,6 +36,7 @@ class ApiFunctionalSpec extends Specification {
 
     void "login and get token"(){
         setup:"logging in"
+
             String login = Holders.grailsApplication.config.root.login
             String password = Holders.grailsApplication.config.root.password
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
@@ -54,9 +56,10 @@ class ApiFunctionalSpec extends Specification {
     }
 
     // create using mockdata
-    void "CREATE api call"() {
+    void "CREATE user with mockdata"() {
         setup:"api is called"
             String METHOD = "POST"
+
 
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
@@ -108,6 +111,7 @@ class ApiFunctionalSpec extends Specification {
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
+
             Integer version = cache['cacheversion']
             String action = 'show'
             //String pkey = cache?."${version}"?."${action}".pkey[0]
@@ -135,34 +139,34 @@ class ApiFunctionalSpec extends Specification {
 
     void "GET api call with version: [domain object]"() {
         setup:"api is called"
-        String METHOD = "GET"
-        LinkedHashMap info = [:]
-        ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            String METHOD = "GET"
+            LinkedHashMap info = [:]
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
-        Integer version = cache['cacheversion']
-        String action = 'show'
-        //String pkey = cache?."${version}"?."${action}".pkey[0]
+            Integer version = cache['cacheversion']
+            String action = 'show'
+            //String pkey = cache?."${version}"?."${action}".pkey[0]
 
-        def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}-1/${this.controller}/show?id=${this.currentId}"].execute();
-        proc.waitFor()
-        def outputStream = new StringBuffer()
-        proc.waitForProcessOutput(outputStream, System.err)
-        String output = outputStream.toString()
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}-1/${this.controller}/show?id=${this.currentId}"].execute();
+            proc.waitFor()
+            def outputStream = new StringBuffer()
+            proc.waitForProcessOutput(outputStream, System.err)
+            String output = outputStream.toString()
 
-        def slurper = new JsonSlurper()
-        slurper.parseText(output).each(){ k,v ->
-            info[k] = v
-        }
-        when:"info is not null"
-        assert info!=[:]
-        then:"get user"
-        cache?."${version}"?."${action}".returns.each(){ k,v ->
-            assert this.authorities.contains(k)
-            v.each(){ it ->
-                assert info."${it.name}" != null
+            def slurper = new JsonSlurper()
+            slurper.parseText(output).each(){ k,v ->
+                info[k] = v
             }
-        }
+        when:"info is not null"
+            assert info!=[:]
+        then:"get user"
+            cache?."${version}"?."${action}".returns.each(){ k,v ->
+                assert this.authorities.contains(k)
+                v.each(){ it ->
+                    assert info."${it.name}" != null
+                }
+            }
     }
 
     // test list of domain objects
@@ -174,7 +178,6 @@ class ApiFunctionalSpec extends Specification {
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
             Integer version = cache['cacheversion']
-
             String action = 'show'
 
             //String pkey = cache?."${version}"?."${action}".pkey[0]
@@ -211,7 +214,6 @@ class ApiFunctionalSpec extends Specification {
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
-
             def slurper = new JsonSlurper()
             slurper.parseText(output).each(){ k,v ->
                 info[k] = v

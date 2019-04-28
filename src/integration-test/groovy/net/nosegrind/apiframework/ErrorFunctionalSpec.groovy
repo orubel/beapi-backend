@@ -56,20 +56,57 @@ class ErrorFunctionalSpec extends Specification {
             assert info.token_type == 'Bearer'
     }
 
+    void "CREATE guest id call"() {
+        setup:"api is called"
+        String METHOD = "POST"
+        String action = 'create'
+        String data = "{'username': 'guesttest','password':'testamundo','email':'guest@guesttest.com'}"
+        def info
+        def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${data}", "${this.testDomain}/${this.appVersion}/person/create"].execute()
+        proc.waitFor()
+        def outputStream = new StringBuffer()
+        proc.waitForProcessOutput(outputStream, System.err)
+        String output = outputStream.toString()
+        info = new JsonSlurper().parseText(output)
+        when:"info is not null"
+        this.guestId = info['id']
+        assert info!=null
+        then:"created user"
+        assert info['id'] != null
+
+    }
+
+    // create using mockdata
+    void "CREATE guest role call"() {
+        setup:"api is called"
+        String METHOD = "POST"
+        String action = 'create'
+        String data = "{'personId': '${this.guestId}','roleId':'1'}"
+        def info
+        def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${data}", "${this.testDomain}/${this.appVersion}/personRole/create"].execute()
+        proc.waitFor()
+        def outputStream = new StringBuffer()
+        proc.waitForProcessOutput(outputStream, System.err)
+        String output = outputStream.toString()
+        info = new JsonSlurper().parseText(output)
+        when:"info is not null"
+        assert info!=null
+        then:"created user"
+        assert info['roleId'] != null
+
+    }
+
     void "GUEST login and get token"(){
         setup:"logging in"
-            Person user = Person.findByUsername('guesttest')
-
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
 
             String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"guesttest\",\"password\":\"testamundo\"}' ${this.testDomain}${loginUri}"
-        def proc = ['bash','-c',url].execute()
+            def proc = ['bash','-c',url].execute();
             proc.waitFor()
             def info = new JsonSlurper().parseText(proc.text)
 
         when:"set token"
             this.guestToken = info.access_token
-            this.guestId = user.id
         then:"has bearer token"
             assert info.token_type == 'Bearer'
     }

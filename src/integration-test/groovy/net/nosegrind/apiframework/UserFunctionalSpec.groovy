@@ -1,20 +1,20 @@
 package net.nosegrind.apiframework
 
-import geb.spock.*
-import grails.gorm.transactions.*
-import grails.testing.mixin.integration.Integration
-import grails.util.Holders
-import grails.util.Metadata
-import groovy.json.JsonSlurper
-import net.nosegrind.apiframework.ApiCacheService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationContext
-import spock.lang.*
 
+import grails.testing.mixin.integration.Integration
+import grails.gorm.transactions.*
+import spock.lang.*
+import geb.spock.*
+import grails.util.Holders
 import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
-
+import groovy.json.JsonSlurper
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
+import net.nosegrind.apiframework.ApiCacheService
 import net.nosegrind.apiframework.Person
+import grails.util.Metadata
+
 
 /**
  * See http://www.gebish.org/manual/current/ for more instructions
@@ -22,7 +22,7 @@ import net.nosegrind.apiframework.Person
 
 @Integration
 @Rollback
-class ApidocFunctionalSpec extends Specification {
+class UserFunctionalSpec extends Specification {
 
     @Autowired
     ApplicationContext applicationContext
@@ -30,7 +30,8 @@ class ApidocFunctionalSpec extends Specification {
     @Shared String token
     @Shared String guestToken
     @Shared List authorities = ['permitAll']
-    @Shared String controller = 'apidoc'
+    @Shared List guestAuthorities = ['permitAll']
+    @Shared String controller = 'person'
     @Shared String testDomain = 'http://localhost:8080'
     @Shared String currentId
     @Shared String guestId
@@ -43,7 +44,7 @@ class ApidocFunctionalSpec extends Specification {
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
 
             String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"${login}\",\"password\":\"${password}\"}' ${this.testDomain}${loginUri}"
-            def proc = ['bash','-c',url].execute()
+            def proc = ['bash','-c',url].execute();
             proc.waitFor()
             def info = new JsonSlurper().parseText(proc.text)
 
@@ -68,7 +69,7 @@ class ApidocFunctionalSpec extends Specification {
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
             info = new JsonSlurper().parseText(output)
-        when:"info is not null"
+            when:"info is not null"
             this.guestId = info['id']
             assert info!=null
         then:"created user"
@@ -96,62 +97,92 @@ class ApidocFunctionalSpec extends Specification {
 
     }
 
+
     void "GUEST login and get token"(){
         setup:"logging in"
-            String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
+        String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
 
-            String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"guesttest\",\"password\":\"testamundo\"}' ${this.testDomain}${loginUri}"
-            def proc = ['bash','-c',url].execute();
-            proc.waitFor()
-            def info = new JsonSlurper().parseText(proc.text)
+        String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"guesttest\",\"password\":\"testamundo\"}' ${this.testDomain}${loginUri}"
+        def proc = ['bash','-c',url].execute();
+        proc.waitFor()
+        def info = new JsonSlurper().parseText(proc.text)
 
         when:"set token"
-            this.guestToken = info.access_token
+        this.guestToken = info.access_token
+        info.authorities.each(){ it ->
+            this.guestAuthorities.add(it)
+        }
         then:"has bearer token"
-            assert info.token_type == 'Bearer'
+        assert info.token_type == 'Bearer'
+        assert !guestAuthorities.contains('ROLE_ADMIN')
     }
 
-    void "GET admin apidoc"() {
-        setup:"apidoc is called"
+    void "Disable User"() {
+        setup:"api is called"
+        String METHOD = "GET"
+        LinkedHashMap info = [:]
+        ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+
+        Integer version = cache['cacheversion']
+        String action = 'disable'
+        //String pkey = cache?."${version}"?."${action}".pkey[0]
+
+        def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/person/disable"].execute()
+        proc.waitFor()
+        def outputStream = new StringBuffer()
+        proc.waitForProcessOutput(outputStream, System.err)
+        String output = outputStream.toString()
+        def slurper = new JsonSlurper()
+        slurper.parseText(output).each(){ k,v ->
+            info[k] = v
+        }
+        when:"info is not null"
+        assert info!=[:]
+        then:"get user"
+        cache?."${version}"?."${action}".returns.each(){ k,v ->
+            assert this.authorities.contains(k)
+            v.each(){ it ->
+                assert info."${it.name}" != null
+            }
+        }
+    }
+
+    void "Get User (BAD CALL)"() {
+        setup:"api is called"
             String METHOD = "GET"
+            LinkedHashMap info = [:]
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+
+            Integer version = cache['cacheversion']
             String action = 'show'
-            def info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show"].execute()
+            //String pkey = cache?."${version}"?."${action}".pkey[0]
+
+            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.guestId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
-            proc.waitForProcessOutput(outputStream, System.err)
-            String output = outputStream.toString()
-            def slurper = new JsonSlurper()
-            slurper.parseText(output).each(){ k,v ->
-                info[k] = v
+            def error = new StringWriter()
+            proc.waitForProcessOutput(outputStream, error)
+            ArrayList stdErr = error.toString().split( '> \n' )
+            ArrayList response1 = stdErr[0].split("> ")
+            ArrayList response2 = stdErr[1].split("< ")
+
+            String method
+            response2.each(){
+                def temp = it.split(' ')
+                switch(temp[0]){
+                    case 'HTTP/1.1':
+                        method = temp[1]
+                        break
+                }
             }
         when:"info is not null"
-            assert info!=[:]
+            assert method!=null
         then:"get user"
-            assert info['apidoc']['stat']['show']!=[:]
+            assert method != 200
     }
 
-    void "GET guest apidoc"() {
-        setup:"apidoc is called"
-
-            String METHOD = "GET"
-            String action = 'show'
-            def info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show"].execute()
-            proc.waitFor()
-            def outputStream = new StringBuffer()
-            proc.waitForProcessOutput(outputStream, System.err)
-            String output = outputStream.toString()
-
-            def slurper = new JsonSlurper()
-            slurper.parseText(output).each(){ k,v ->
-                info[k] = v
-            }
-        when:"info is not null"
-            assert info!=[:]
-        then:"get user"
-            assert info['apidoc']['stat']==null
-    }
 
 
     void "DELETE guest:"() {

@@ -19,9 +19,9 @@ class PersonController{
 			Person user = new Person()
 			if(isSuperuser()){
 				user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
-
 			}else{
-				user = Person.get(springSecurityService.principal.id)
+				//user = Person.get(springSecurityService.principal.id)
+				user = springSecurityService.getCurrentUser()
 			}
 			if(user){
 				return [person: user]
@@ -57,7 +57,8 @@ class PersonController{
 			if(isSuperuser()){
 				user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
 			}else{
-				user = Person.get(springSecurityService.principal.id)
+				//user = Person.get(springSecurityService.principal.id)
+				user = springSecurityService.getCurrentUser()
 			}
 			if(user){
 				user.username = params.username
@@ -96,25 +97,56 @@ class PersonController{
 		Person user
 		try {
 			if(isSuperuser()){
+				println("#####SUPER######")
 				user = Person.get(params?.id?.toLong())
 			}else{
 				user = Person.get(springSecurityService.principal.id)
 			}
 			if(user){
 				user.enabled=false
-				user.accountExpired=true
-				user.accountLocked=true
-				user.passwordExpired=true
 				//user.delete(flush: true, failOnError: true)
 				if(!user.save(flush:true,failOnError:true)){
 					user.errors.allErrors.each { println(it) }
 				}
-				return [person: [id:params.id.toLong()]]
+
+				if(isSuperuser()){
+					return [person: [id:params.id.toLong()]]
+				}else{
+					return [person: [id:springSecurityService.principal.id]]
+				}
 			}else{
 				render(status: 500,text:"Id " + params.id + " does not match record in database.")
 			}
 		}catch(Exception e){
 			throw new Exception("[PersonController : disable] : Exception - full stack trace follows:",e)
+		}
+	}
+
+	LinkedHashMap enable() {
+		Person user
+		try {
+			if(isSuperuser()){
+				user = Person.get(params?.id?.toLong())
+			}else{
+				user = Person.get(springSecurityService.principal.id)
+			}
+			if(user){
+				user.enabled=true
+				//user.delete(flush: true, failOnError: true)
+				if(!user.save(flush:true,failOnError:true)){
+					user.errors.allErrors.each { println(it) }
+				}
+
+				if(isSuperuser()){
+					return [person: [id:params.id.toLong()]]
+				}else{
+					return [person: [id:springSecurityService.principal.id]]
+				}
+			}else{
+				render(status: 500,text:"Id " + params.id + " does not match record in database.")
+			}
+		}catch(Exception e){
+			throw new Exception("[PersonController : enable] : Exception - full stack trace follows:",e)
 		}
 	}
 
@@ -124,14 +156,17 @@ class PersonController{
 		try {
 			user = Person.get(params.id)
 			if(user){
-				prole = PersonRole.findAllByPerson(user)
-				prole.each(){
-					println(it.getClass())
-					it.delete(flush: true, failOnError: true)
-				}
-				//prole.delete(flush: true, failOnError: true)
-				user.delete(flush: true, failOnError: true)
-				return [person: [id:params.id.toLong()]]
+					prole = PersonRole.findAllByPerson(user)
+					prole.each() {
+						it.delete(flush: true, failOnError: true)
+					}
+
+					/**
+					 * additional dependencies to be removed should be put here
+					 */
+
+					user.delete(flush: true, failOnError: true)
+					return [person: [id: params.id.toLong()]]
 			}else{
 				render(status: 500,text:"Id " + params.id + " does not match record in database.")
 			}
