@@ -35,6 +35,9 @@ class ApidocFunctionalSpec extends Specification {
     @Shared String currentId
     @Shared String guestId
     @Shared String appVersion = "v${Metadata.current.getProperty(Metadata.APPLICATION_VERSION, String.class)}"
+    @Shared String guestdata = "{'username': 'apidoctest','password':'testamundo','email':'apidoc@guesttest.com'}"
+    @Shared String guestlogin = 'apidoctest'
+    @Shared String guestpassword = 'testamundo'
 
     void "login and get token"(){
         setup:"logging in"
@@ -60,9 +63,8 @@ class ApidocFunctionalSpec extends Specification {
         setup:"api is called"
             String METHOD = "POST"
             String action = 'create'
-            String data = "{'username': 'guesttest','password':'testamundo','email':'guest@guesttest.com'}"
             def info
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${data}", "${this.testDomain}/${this.appVersion}/person/create"].execute()
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/person/create"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -100,10 +102,10 @@ class ApidocFunctionalSpec extends Specification {
         setup:"logging in"
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
 
-            String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"guesttest\",\"password\":\"testamundo\"}' ${this.testDomain}${loginUri}"
-            def proc = ['bash','-c',url].execute();
-            proc.waitFor()
-            def info = new JsonSlurper().parseText(proc.text)
+        String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"${this.guestlogin}\",\"password\":\"${this.guestpassword}\"}' ${this.testDomain}${loginUri}"
+        def proc = ['bash','-c',url].execute()
+        proc.waitFor()
+        def info = new JsonSlurper().parseText(proc.text)
 
         when:"set token"
             this.guestToken = info.access_token

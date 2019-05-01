@@ -45,11 +45,6 @@ apply plugin: "org.grails.grails-web"
 //apply plugin: "org.grails.grails-gsp"
 
 
-task generateIostateCommand(type: ApplicationContextCommandTask) {
-    classpath =  project.sourceSets.main.runtimeClasspath + project.configurations.console
-    command = "generate-iostate"
-}
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -77,14 +72,20 @@ repositories {
 //    applyMavenExclusions false
 //}
 
-bootRun {
-    systemProperties = System.properties
+
+task generateIostateCommand(type: ApplicationContextCommandTask) {
+    classpath =  project.sourceSets.main.runtimeClasspath + project.configurations.console
+    command = "generate-iostate"
 }
 
-test {
-    systemProperties = System.properties
+task generateControllerCommand(type: ApplicationContextCommandTask) {
+    classpath =  project.sourceSets.main.runtimeClasspath + project.configurations.console
+    command = "generate-controller"
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = gradleWrapperVersion
+}
 
 
 dependencies {
@@ -178,15 +179,19 @@ dependencies {
     compile 'org.grails.plugins:quartz:2.0.13'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleWrapperVersion
-}
-
 bootRun {
     systemProperties = System.properties
 }
 
+test {
+    systemProperties = System.properties
+}
+
 generateIostateCommand {
+    systemProperties = System.properties
+}
+
+generateControllerCommand {
     systemProperties = System.properties
 }
 

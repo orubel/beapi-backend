@@ -4,14 +4,13 @@ class PersonController{
 	
 	def springSecurityService
 
+
 	HashMap list() {
 		if(isSuperuser()){
 			def result = Person.list()
 			return [person:result]
 		}
 	}
-
-	java.lang.String value(){}
 
 
 	LinkedHashMap show(){

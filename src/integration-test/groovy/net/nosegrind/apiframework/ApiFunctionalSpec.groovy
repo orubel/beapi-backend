@@ -34,6 +34,7 @@ class ApiFunctionalSpec extends Specification {
     @Shared String currentId
     @Shared String appVersion = "v${Metadata.current.getProperty(Metadata.APPLICATION_VERSION, String.class)}"
 
+
     void "login and get token"(){
         setup:"logging in"
 
