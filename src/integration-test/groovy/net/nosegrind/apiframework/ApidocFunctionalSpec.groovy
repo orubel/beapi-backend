@@ -30,7 +30,7 @@ class ApidocFunctionalSpec extends Specification {
     @Shared String token
     @Shared String guestToken
     @Shared List authorities = ['permitAll']
-    @Shared String testDomain = 'http://localhost:8080'
+    @Shared String testDomain
     @Shared String currentId
     @Shared String guestId
     @Shared String appVersion = "v${Metadata.current.getProperty(Metadata.APPLICATION_VERSION, String.class)}"
@@ -41,7 +41,7 @@ class ApidocFunctionalSpec extends Specification {
     void "login and get token"(){
         setup:"logging in"
             String METHOD = "POST"
-
+            this.testDomain = Holders.grailsApplication.config.environments.test.grails.serverURL
             String login = Holders.grailsApplication.config.root.login
             String password = Holders.grailsApplication.config.root.password
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
