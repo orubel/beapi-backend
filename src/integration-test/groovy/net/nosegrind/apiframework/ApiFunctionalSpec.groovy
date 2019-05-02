@@ -29,7 +29,6 @@ class ApiFunctionalSpec extends Specification {
 
     @Shared String token
     @Shared List authorities = ['permitAll']
-    @Shared String controller = 'person'
     @Shared String testDomain = 'http://localhost:8080'
     @Shared String currentId
     @Shared String appVersion = "v${Metadata.current.getProperty(Metadata.APPLICATION_VERSION, String.class)}"
@@ -37,7 +36,6 @@ class ApiFunctionalSpec extends Specification {
 
     void "login and get token"(){
         setup:"logging in"
-
             String login = Holders.grailsApplication.config.root.login
             String password = Holders.grailsApplication.config.root.password
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
@@ -60,13 +58,12 @@ class ApiFunctionalSpec extends Specification {
     void "CREATE user with mockdata"() {
         setup:"api is called"
             String METHOD = "POST"
-
-
+            String controller = 'person'
+            String action = 'create'
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
 
-            String action = 'create'
             String data = "{"
             cache?."${version}"?."${action}".receives.each(){ k,v ->
                 v.each(){
@@ -77,7 +74,7 @@ class ApiFunctionalSpec extends Specification {
         
             def info
 
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute();
 
             proc.waitFor()
             def outputStream = new StringBuffer()
@@ -108,16 +105,17 @@ class ApiFunctionalSpec extends Specification {
     void "GET api call: [domain object]"() {
         setup:"api is called"
             String METHOD = "GET"
+            String controller = 'person'
+            String action = 'show'
             LinkedHashMap info = [:]
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
-
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
-            String action = 'show'
+
             //String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -141,15 +139,16 @@ class ApiFunctionalSpec extends Specification {
     void "GET api call with version: [domain object]"() {
         setup:"api is called"
             String METHOD = "GET"
+            String controller = 'person'
+            String action = 'show'
             LinkedHashMap info = [:]
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
-            String action = 'show'
             //String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}-1/${this.controller}/show?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}-1/${controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -174,16 +173,16 @@ class ApiFunctionalSpec extends Specification {
     void "GET list api call: [list of domain objects]"() {
         setup:"api is called"
             String METHOD = "GET"
+            String controller = 'person'
+            String action = 'list'
             LinkedHashMap info = [:]
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
 
-            Integer version = cache['cacheversion']
-            String action = 'show'
-
+            //LinkedHashMap cache = apiCacheService.getApiCache(controller)
+            //Integer version = cache['cacheversion']
             //String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/list"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -203,14 +202,15 @@ class ApiFunctionalSpec extends Specification {
     void "DELETE api call: [map]"() {
         setup:"api is called"
             String METHOD = "DELETE"
+            String controller = 'person'
+            String action = 'delete'
             LinkedHashMap info = [:]
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
 
             Integer version = cache['cacheversion']
 
-            String action = 'delete'
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/delete?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)

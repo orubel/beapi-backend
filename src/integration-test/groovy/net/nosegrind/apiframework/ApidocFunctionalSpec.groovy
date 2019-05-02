@@ -30,7 +30,6 @@ class ApidocFunctionalSpec extends Specification {
     @Shared String token
     @Shared String guestToken
     @Shared List authorities = ['permitAll']
-    @Shared String controller = 'apidoc'
     @Shared String testDomain = 'http://localhost:8080'
     @Shared String currentId
     @Shared String guestId
@@ -42,6 +41,7 @@ class ApidocFunctionalSpec extends Specification {
     void "login and get token"(){
         setup:"logging in"
             String METHOD = "POST"
+
             String login = Holders.grailsApplication.config.root.login
             String password = Holders.grailsApplication.config.root.password
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
@@ -119,9 +119,10 @@ class ApidocFunctionalSpec extends Specification {
     void "GET admin apidoc"() {
         setup:"apidoc is called"
             String METHOD = "GET"
+            String controller = 'apidoc'
             String action = 'show'
             def info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute()
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -138,11 +139,11 @@ class ApidocFunctionalSpec extends Specification {
 
     void "GET guest apidoc"() {
         setup:"apidoc is called"
-
             String METHOD = "GET"
+            String controller = 'apidoc'
             String action = 'show'
             def info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute()
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
