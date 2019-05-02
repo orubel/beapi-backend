@@ -41,11 +41,12 @@ class ApidocFunctionalSpec extends Specification {
 
     void "login and get token"(){
         setup:"logging in"
+            String METHOD = "POST"
             String login = Holders.grailsApplication.config.root.login
             String password = Holders.grailsApplication.config.root.password
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
 
-            String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"${login}\",\"password\":\"${password}\"}' ${this.testDomain}${loginUri}"
+            String url = "curl -H 'Content-Type: application/json' -X ${METHOD} -d '{\"username\":\"${login}\",\"password\":\"${password}\"}' ${this.testDomain}${loginUri}"
             def proc = ['bash','-c',url].execute()
             proc.waitFor()
             def info = new JsonSlurper().parseText(proc.text)
@@ -62,9 +63,10 @@ class ApidocFunctionalSpec extends Specification {
     void "CREATE guest id call"() {
         setup:"api is called"
             String METHOD = "POST"
+            String controller = 'person'
             String action = 'create'
             def info
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/person/create"].execute()
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -82,10 +84,11 @@ class ApidocFunctionalSpec extends Specification {
     void "CREATE guest role call"() {
         setup:"api is called"
             String METHOD = "POST"
+            String controller = 'personRole'
             String action = 'create'
             String data = "{'personId': '${this.guestId}','roleId':'1'}"
             def info
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${data}", "${this.testDomain}/${this.appVersion}/personRole/create"].execute()
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -102,10 +105,10 @@ class ApidocFunctionalSpec extends Specification {
         setup:"logging in"
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
 
-        String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"${this.guestlogin}\",\"password\":\"${this.guestpassword}\"}' ${this.testDomain}${loginUri}"
-        def proc = ['bash','-c',url].execute()
-        proc.waitFor()
-        def info = new JsonSlurper().parseText(proc.text)
+            String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"${this.guestlogin}\",\"password\":\"${this.guestpassword}\"}' ${this.testDomain}${loginUri}"
+            def proc = ['bash','-c',url].execute()
+            proc.waitFor()
+            def info = new JsonSlurper().parseText(proc.text)
 
         when:"set token"
             this.guestToken = info.access_token
@@ -118,7 +121,7 @@ class ApidocFunctionalSpec extends Specification {
             String METHOD = "GET"
             String action = 'show'
             def info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show"].execute()
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -139,7 +142,7 @@ class ApidocFunctionalSpec extends Specification {
             String METHOD = "GET"
             String action = 'show'
             def info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show"].execute()
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -159,8 +162,10 @@ class ApidocFunctionalSpec extends Specification {
     void "DELETE guest:"() {
         setup:"api is called"
             String METHOD = "DELETE"
+            String controller = 'person'
+            String action = 'delete'
             LinkedHashMap info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/person/delete?id=${this.guestId}"].execute()
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.guestId}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
