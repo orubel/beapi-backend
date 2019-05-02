@@ -30,7 +30,6 @@ class ErrorFunctionalSpec extends Specification {
     @Shared String token
     @Shared String guestToken
     @Shared List authorities = ['permitAll']
-    @Shared String controller = 'person'
     @Shared String testDomain = 'http://localhost:8080'
     @Shared String currentId
     @Shared String guestId
@@ -62,10 +61,11 @@ class ErrorFunctionalSpec extends Specification {
     void "CREATE guest id call"() {
         setup:"api is called"
         String METHOD = "POST"
+        String controller = 'person'
         String action = 'create'
 
         def info
-        def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/person/create"].execute()
+        def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
         proc.waitFor()
         def outputStream = new StringBuffer()
         proc.waitForProcessOutput(outputStream, System.err)
@@ -83,10 +83,12 @@ class ErrorFunctionalSpec extends Specification {
     void "CREATE guest role call"() {
         setup:"api is called"
         String METHOD = "POST"
+        String controller = 'personRole'
         String action = 'create'
+
         String data = "{'personId': '${this.guestId}','roleId':'1'}"
         def info
-        def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${data}", "${this.testDomain}/${this.appVersion}/personRole/create"].execute()
+        def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
         proc.waitFor()
         def outputStream = new StringBuffer()
         proc.waitForProcessOutput(outputStream, System.err)
@@ -118,12 +120,14 @@ class ErrorFunctionalSpec extends Specification {
     void "CREATE api call"() {
         setup:"api is called"
             String METHOD = "POST"
+            String controller = 'person'
+            String action = 'create'
 
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
 
-            String action = 'create'
+
             String data = "{"
             cache?."${version}"?."${action}".receives.each(){ k,v ->
                 v.each(){
@@ -134,7 +138,7 @@ class ErrorFunctionalSpec extends Specification {
 
             def info
 
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${this.controller}/${action}"].execute();
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute();
 
             proc.waitFor()
             def outputStream = new StringBuffer()
@@ -163,15 +167,18 @@ class ErrorFunctionalSpec extends Specification {
     void "Testing checkRequestMethod with Bad Variables"() {
         setup:"api is called"
             String METHOD = "POST"
-            LinkedHashMap info = [:]
-            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-
-            Integer version = cache['cacheversion']
+            String controller = 'person'
             String action = 'show'
+
+            LinkedHashMap info = [:]
+
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
+            Integer version = cache['cacheversion']
+
             //String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
+            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             def error = new StringWriter()
@@ -201,15 +208,18 @@ class ErrorFunctionalSpec extends Specification {
     void "Testing checkURIDefinitions with Bad Variables"() {
         setup:"api is called"
             String METHOD = "GET"
+            String controller = 'person'
+            String action = 'show'
+
             LinkedHashMap info = [:]
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
 
             Integer version = cache['cacheversion']
-            String action = 'show'
+
             String data = "{'fred': 'flintstone'}"
 
-            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}", "-d", "${data}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
+            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}", "-d", "${data}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             def error = new StringWriter()
@@ -238,14 +248,17 @@ class ErrorFunctionalSpec extends Specification {
     void "Testing Bad Token with Bad Variables"() {
         setup:"api is called"
             String METHOD = "GET"
-            LinkedHashMap info = [:]
-            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-
-            Integer version = cache['cacheversion']
+            String controller = 'person'
             String action = 'show'
 
-            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer 1234567890","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.currentId}"].execute();
+            LinkedHashMap info = [:]
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
+
+            Integer version = cache['cacheversion']
+
+
+            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer 1234567890","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             def error = new StringWriter()
@@ -275,15 +288,17 @@ class ErrorFunctionalSpec extends Specification {
     void "Testing CheckAuth on Unauthorized Endpoint"() {
         setup:"api is called"
             String METHOD = "POST"
+            String controller = 'personRole'
+            String action = 'create'
 
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
 
-            String action = 'create'
+
             String data = "{'personId':${this.guestId},'roleId':1}"
 
-            def proc = ["curl","-v", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.guestToken}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/personRole/create"].execute()
+            def proc = ["curl","-v", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.guestToken}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
 
             proc.waitFor()
             def outputStream = new StringBuffer()
@@ -316,14 +331,16 @@ class ErrorFunctionalSpec extends Specification {
     void "DELETE api call: [map]"() {
         setup:"api is called"
             String METHOD = "DELETE"
+            String controller = 'person'
+            String action = 'delete'
+
             LinkedHashMap info = [:]
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
 
-            String action = 'delete'
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/delete?id=${this.currentId}"].execute();
+
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
