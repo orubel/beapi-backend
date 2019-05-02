@@ -31,7 +31,6 @@ class UserFunctionalSpec extends Specification {
     @Shared String guestToken
     @Shared List authorities = ['permitAll']
     @Shared List guestAuthorities = ['permitAll']
-    @Shared String controller = 'person'
     @Shared String testDomain = 'http://localhost:8080'
     @Shared String currentId
     @Shared String guestId
@@ -63,10 +62,11 @@ class UserFunctionalSpec extends Specification {
     void "CREATE guest id call"() {
         setup:"api is called"
             String METHOD = "POST"
+        String controller = 'person'
             String action = 'create'
 
             def info
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/person/create"].execute()
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -84,10 +84,11 @@ class UserFunctionalSpec extends Specification {
     void "CREATE guest role call"() {
         setup:"api is called"
             String METHOD = "POST"
+            String controller = 'personRole'
             String action = 'create'
             String data = "{'personId': '${this.guestId}','roleId':'1'}"
             def info
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "POST", "-d", "${data}", "${this.testDomain}/${this.appVersion}/personRole/create"].execute()
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -102,10 +103,12 @@ class UserFunctionalSpec extends Specification {
 
 
     void "GUEST login and get token"(){
+        String METHOD = "POST"
+
         setup:"logging in"
         String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
 
-        String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"${this.guestlogin}\",\"password\":\"${this.guestpassword}\"}' ${this.testDomain}${loginUri}"
+        String url = "curl -H 'Content-Type: application/json' -X ${METHOD} -d '{\"username\":\"${this.guestlogin}\",\"password\":\"${this.guestpassword}\"}' ${this.testDomain}${loginUri}"
         def proc = ['bash','-c',url].execute()
         proc.waitFor()
         def info = new JsonSlurper().parseText(proc.text)
@@ -119,15 +122,16 @@ class UserFunctionalSpec extends Specification {
     void "Disable User"() {
         setup:"api is called"
         String METHOD = "GET"
-        LinkedHashMap info = [:]
-        ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-
-        Integer version = cache['cacheversion']
+        String controller = 'person'
         String action = 'disable'
-        //String pkey = cache?."${version}"?."${action}".pkey[0]
+        LinkedHashMap info = [:]
 
-        def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/person/disable"].execute()
+        ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+        LinkedHashMap cache = apiCacheService.getApiCache(controller)
+        Integer version = cache['cacheversion']
+
+
+        def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
         proc.waitFor()
         def outputStream = new StringBuffer()
         proc.waitForProcessOutput(outputStream, System.err)
@@ -150,15 +154,17 @@ class UserFunctionalSpec extends Specification {
     void "Get User (BAD CALL)"() {
         setup:"api is called"
             String METHOD = "GET"
-            LinkedHashMap info = [:]
-            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-
-            Integer version = cache['cacheversion']
+            String controller = 'person'
             String action = 'show'
-            //String pkey = cache?."${version}"?."${action}".pkey[0]
+            LinkedHashMap info = [:]
 
-            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${this.controller}/show?id=${this.guestId}"].execute();
+            ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
+            LinkedHashMap cache = apiCacheService.getApiCache(controller)
+            Integer version = cache['cacheversion']
+
+
+
+            def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.guestId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             def error = new StringWriter()
@@ -187,8 +193,10 @@ class UserFunctionalSpec extends Specification {
     void "DELETE guest:"() {
         setup:"api is called"
             String METHOD = "DELETE"
+            String controller = 'person'
+            String action = 'delete'
             LinkedHashMap info = [:]
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/person/delete?id=${this.guestId}"].execute()
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.guestId}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
