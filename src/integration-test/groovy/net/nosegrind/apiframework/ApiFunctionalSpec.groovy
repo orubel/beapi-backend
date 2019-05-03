@@ -28,11 +28,15 @@ class ApiFunctionalSpec extends Specification {
     ApplicationContext applicationContext
 
     @Shared String token
+    @Shared String guestToken
     @Shared List authorities = ['permitAll']
     @Shared String testDomain
     @Shared String currentId
+    @Shared String guestId
     @Shared String appVersion = "v${Metadata.current.getProperty(Metadata.APPLICATION_VERSION, String.class)}"
-
+    @Shared String guestdata = "{'username': 'apitest','password':'testamundo','email':'api@guesttest.com'}"
+    @Shared String guestlogin = 'apitest'
+    @Shared String guestpassword = 'testamundo'
 
     void "login and get token"(){
         setup:"logging in"
@@ -56,7 +60,7 @@ class ApiFunctionalSpec extends Specification {
     }
 
     // create using mockdata
-    void "CREATE user with mockdata"() {
+    void "CREATE user"() {
         setup:"api is called"
             String METHOD = "POST"
             String controller = 'person'
@@ -65,23 +69,14 @@ class ApiFunctionalSpec extends Specification {
             LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
 
-            String data = "{"
-            cache?."${version}"?."${action}".receives.each(){ k,v ->
-                v.each(){
-                    data += "'"+it.name+"': '"+it.mockData+"',"
-                }
-            }
-            data += "}"
-        
             def info
 
-            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute();
+            def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute();
 
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
-
 
             info = new JsonSlurper().parseText(output)
 
@@ -92,13 +87,50 @@ class ApiFunctionalSpec extends Specification {
                 assert this.authorities.contains(k)
                 v.each(){
                     if(it.keyType=='PRIMARY'){
-                        this.currentId = info."${it.name}"
+                        this.guestId = info."${it.name}"
                     }
                     assert info."${it.name}" != null
                 }
             }
     }
 
+    // create using mockdata
+    void "CREATE user with role"() {
+        setup:"api is called"
+        String METHOD = "POST"
+        String controller = 'personRole'
+        String action = 'create'
+        String data = "{'personId': '${this.guestId}','roleId':'1'}"
+        def info
+        def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
+        proc.waitFor()
+        def outputStream = new StringBuffer()
+        proc.waitForProcessOutput(outputStream, System.err)
+        String output = outputStream.toString()
+        info = new JsonSlurper().parseText(output)
+        when:"info is not null"
+        assert info!=null
+        then:"created user"
+        assert info['roleId'] != null
+
+    }
+
+    void "GUEST login and get token"(){
+        String METHOD = "POST"
+
+        setup:"logging in"
+        String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
+
+        String url = "curl -H 'Content-Type: application/json' -X ${METHOD} -d '{\"username\":\"${this.guestlogin}\",\"password\":\"${this.guestpassword}\"}' ${this.testDomain}${loginUri}"
+        def proc = ['bash','-c',url].execute()
+        proc.waitFor()
+        def info = new JsonSlurper().parseText(proc.text)
+
+        when:"set token"
+        this.guestToken = info.access_token
+        then:"has bearer token"
+        assert info.token_type == 'Bearer'
+    }
 
     /**
      * Regular Calls
@@ -116,7 +148,7 @@ class ApiFunctionalSpec extends Specification {
 
             //String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.guestId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -149,7 +181,7 @@ class ApiFunctionalSpec extends Specification {
             Integer version = cache['cacheversion']
             //String pkey = cache?."${version}"?."${action}".pkey[0]
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}-1/${controller}/${action}?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}-1/${controller}/${action}?id=${this.guestId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -211,7 +243,7 @@ class ApiFunctionalSpec extends Specification {
 
             Integer version = cache['cacheversion']
 
-            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.currentId}"].execute();
+            def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.guestId}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
@@ -233,7 +265,7 @@ class ApiFunctionalSpec extends Specification {
 
                 }
             }
-            assert this.currentId == id
+            assert this.guestId == id
     }
 
 

@@ -30,7 +30,6 @@ class UserFunctionalSpec extends Specification {
     @Shared String token
     @Shared String guestToken
     @Shared List authorities = ['permitAll']
-    @Shared List guestAuthorities = ['permitAll']
     @Shared String testDomain
     @Shared String currentId
     @Shared String guestId
@@ -162,8 +161,6 @@ class UserFunctionalSpec extends Specification {
             ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
             LinkedHashMap cache = apiCacheService.getApiCache(controller)
             Integer version = cache['cacheversion']
-
-
 
             def proc = ["curl","-v","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.guestToken}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}?id=${this.guestId}"].execute();
             proc.waitFor()
