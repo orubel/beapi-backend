@@ -133,7 +133,7 @@ class ApiFunctionalSpec extends Specification {
     }
 
     /**
-     * Regular Calls
+     * TODO: output errors for this
      */
     void "GET api call: [domain object]"() {
         setup:"api is called"
@@ -169,6 +169,9 @@ class ApiFunctionalSpec extends Specification {
             }
     }
 
+    /**
+     * TODO: output errors for this
+     */
     void "GET api call with version: [domain object]"() {
         setup:"api is called"
             String METHOD = "GET"
@@ -218,9 +221,14 @@ class ApiFunctionalSpec extends Specification {
             def proc = ["curl","-H","Content-Type: application/json","-H","Authorization: Bearer ${this.token}","--request","${METHOD}","${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute();
             proc.waitFor()
             def outputStream = new StringBuffer()
-            proc.waitForProcessOutput(outputStream, System.err)
+            def error = new StringWriter()
+            proc.waitForProcessOutput(outputStream, error)
             String output = outputStream.toString()
 
+            //ArrayList stdErr = error.toString().split( '> \n' )
+            //ArrayList response1 = stdErr[0].split("> ")
+            //ArrayList response2 = stdErr[1].split("< ")
+        
             def slurper = new JsonSlurper()
             slurper.parseText(output).each(){ k,v ->
                 info[k] = v
