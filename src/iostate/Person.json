@@ -17,6 +17,7 @@ net.nosegrind.IOState
 	
 {
     "NAME":"person",
+    "NETWORKGRP": "public",
     "VALUES": {
         "id": {
             "key": "PRIMARY",
@@ -95,6 +96,22 @@ net.nosegrind.IOState
 			        	"permitAll":["id","version"]
 			        }
 			    },
+			    "update": {
+			     	"METHOD":"PUT",
+			    	"DESCRIPTION":"Update Person",
+			    	"ROLES":{
+				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
+				    "BATCH":["ROLE_ADMIN"],
+				    "HOOK":["ROLE_ADMIN"]
+				},
+			        "REQUEST": {
+			            "permitAll":["username","password","email"],
+                                    "ROLE_ADMIN":["id"],
+			        },
+			        "RESPONSE": {
+			        	"permitAll":["id","version"]
+			        }
+			    },
 			    "show": {
 			     	"METHOD":"GET",
 			    	"DESCRIPTION":"Get Person by ID",
@@ -126,6 +143,38 @@ net.nosegrind.IOState
 			        	"permitAll":["id","version","username","email","enabled","accountExpired"]
 			        }
 			    },
+			    "enable": {
+			     	"METHOD":"GET",
+			    	"DESCRIPTION":"Enable Person",
+			    	"ROLES":{
+				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
+				    "BATCH":["ROLE_ADMIN"],
+				    "HOOK":["ROLE_ADMIN"]
+				},
+			        "REQUEST": {
+                                    "permitAll":[],
+                                    "ROLE_ADMIN":["id"],
+			        },
+			        "RESPONSE": {
+			        	"permitAll":["id"]
+			        }
+			    },
+			    "disable": {
+			     	"METHOD":"GET",
+			    	"DESCRIPTION":"Disable Person",
+			    	"ROLES":{
+				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
+				    "BATCH":["ROLE_ADMIN"],
+				    "HOOK":["ROLE_ADMIN"]
+				},
+			        "REQUEST": {
+                                    "permitAll":[],
+                                    "ROLE_ADMIN":["id"],
+			        },
+			        "RESPONSE": {
+			        	"permitAll":["id"]
+			        }
+			    },
 			    "delete": {
 			     	"METHOD":"DELETE",
 			    	"DESCRIPTION":"Delete Person",
@@ -135,7 +184,8 @@ net.nosegrind.IOState
 				    "HOOK":["ROLE_ADMIN"]
 				},
 			        "REQUEST": {
-			            "permitAll":["id"]
+			            "permitAll":[],
+                                    "ROLE_ADMIN":["id"],
 			        },
 			        "RESPONSE": {
 			        	"permitAll":["id"]

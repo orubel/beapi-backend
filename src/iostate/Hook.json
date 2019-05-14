@@ -17,6 +17,7 @@ net.nosegrind.Hook
 	
 {
     "NAME":"hook",
+    "NETWORKGRP": "public",
     "VALUES": {
         "id": {
             "type": "PKEY",

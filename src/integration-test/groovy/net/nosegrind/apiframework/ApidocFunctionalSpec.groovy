@@ -133,8 +133,6 @@ class ApidocFunctionalSpec extends Specification {
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
 
-
-
             def slurper = new JsonSlurper()
             slurper.parseText(output).each(){ k,v ->
                 info[k] = v
@@ -181,7 +179,8 @@ class ApidocFunctionalSpec extends Specification {
             proc.waitForProcessOutput(outputStream, error)
             String output = outputStream.toString()
 
-        //ArrayList stdErr = error.toString().split( '> \n' )
+        ArrayList stdErr = error.toString().split( '> \n' )
+        println(stdErr)
         //ArrayList response1 = stdErr[0].split("> ")
         //ArrayList response2 = stdErr[1].split("< ")
 

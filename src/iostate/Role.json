@@ -17,6 +17,7 @@ net.nosegrind.IOState
 	
 {
     "NAME":"role",
+    "NETWORKGRP": "public",
     "VALUES": {
         "id": {
             "key": "PRIMARY",

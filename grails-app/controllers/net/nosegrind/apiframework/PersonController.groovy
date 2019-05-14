@@ -19,8 +19,8 @@ class PersonController{
 			if(isSuperuser()){
 				user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
 			}else{
-				//user = Person.get(springSecurityService.principal.id)
-				user = springSecurityService.getCurrentUser()
+				user = Person.get(springSecurityService.principal.id)
+				//user = springSecurityService.getCurrentUser()
 			}
 			if(user){
 				return [person: user]
@@ -124,7 +124,7 @@ class PersonController{
 	LinkedHashMap enable() {
 		Person user
 		try {
-			if(isSuperuser()){
+			if(springSecurityService.principal.authorities*.contains('ROLE_ADMIN')){
 				user = Person.get(params?.id?.toLong())
 			}else{
 				user = Person.get(springSecurityService.principal.id)
@@ -175,6 +175,6 @@ class PersonController{
 	}
 
 	protected boolean isSuperuser() {
-		springSecurityService.principal.authorities*.authority.any { grailsApplication.config.apitoolkit.admin.roles.contains(it) }
+		springSecurityService.principal.authorities*.authority.contains('ROLE_ADMIN')
 	}
 }

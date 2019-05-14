@@ -20,9 +20,19 @@ class BootStrap {
         // only instantiate if this server is 'master'; check config value
         server = Server.createTcpServer(args).start()
 
-        def apitoolkit = grailsApplication.config.apitoolkit
+        def roles = []
+        def networkRoles = grailsApplication.config.apitoolkit.networkRoles
+        networkRoles.each { k, v ->
+            v.each{ it2 ->
+                if(!roles.contains(it2)){
+                    roles.add(it2)
+                }
+            }
+        }
 
-        apitoolkit.roles.each { it ->
+        //def apitoolkit = grailsApplication.config.apitoolkit
+       // apitoolkit.roles.each { it ->
+        roles.each { it ->
             String currRole = it
             Role role = Role.findByAuthority(currRole)
             if(!role){
@@ -38,9 +48,6 @@ class BootStrap {
             Role adminRole = Role.findByAuthority("ROLE_ADMIN")
 
             if(!user?.id){
-                //println(grailsApplication.config.root.login)
-                //println(grailsApplication.config.root.password)
-                //println(grailsApplication.config.root.email)
                 user = new Person(username:"${grailsApplication.config.root.login}",password:"${grailsApplication.config.root.password}",email:"${grailsApplication.config.root.email}")
 
                 if(!user.save(flush:true)){

@@ -17,6 +17,7 @@ net.nosegrind.IOState
 	
 {
     "NAME":"personRole",
+    "NETWORKGRP": "public",
     "VALUES": {
         "personId": {
             "key": "FOREIGN",
