@@ -56,8 +56,7 @@
 	            	"METHOD":"POST",
 	            	"DESCRIPTION":"Update IOState",
 	            	"ROLES": {
-			    "DEFAULT":["ROLE_ADMIN","ROLE_ARCH"],
-	            	    "BATCH":["ROLE_ADMIN","ROLE_ARCH"]
+	            	    "BATCH":["ROLE_ADMIN"]
 			},
 	                "REQUEST": {
 	                    "permitAll":["name"]

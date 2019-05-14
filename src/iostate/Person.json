@@ -85,7 +85,6 @@ net.nosegrind.IOState
 			     	"METHOD":"POST",
 			    	"DESCRIPTION":"Create new Person",
 			    	"ROLES":{
-				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
 				    "BATCH":["ROLE_ADMIN"],
 				    "HOOK":["ROLE_ADMIN"]
 				},
@@ -100,7 +99,6 @@ net.nosegrind.IOState
 			     	"METHOD":"PUT",
 			    	"DESCRIPTION":"Update Person",
 			    	"ROLES":{
-				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
 				    "BATCH":["ROLE_ADMIN"],
 				    "HOOK":["ROLE_ADMIN"]
 				},
@@ -116,7 +114,6 @@ net.nosegrind.IOState
 			     	"METHOD":"GET",
 			    	"DESCRIPTION":"Get Person by ID",
 			    	"ROLES":{
-				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
 				    "BATCH":["ROLE_ADMIN"],
 				    "HOOK":["ROLE_ADMIN"]
 				},
@@ -147,7 +144,6 @@ net.nosegrind.IOState
 			     	"METHOD":"GET",
 			    	"DESCRIPTION":"Enable Person",
 			    	"ROLES":{
-				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
 				    "BATCH":["ROLE_ADMIN"],
 				    "HOOK":["ROLE_ADMIN"]
 				},
@@ -163,7 +159,6 @@ net.nosegrind.IOState
 			     	"METHOD":"GET",
 			    	"DESCRIPTION":"Disable Person",
 			    	"ROLES":{
-				    "DEFAULT":["ROLE_ADMIN","ROLE_USER"],
 				    "BATCH":["ROLE_ADMIN"],
 				    "HOOK":["ROLE_ADMIN"]
 				},
@@ -179,7 +174,6 @@ net.nosegrind.IOState
 			     	"METHOD":"DELETE",
 			    	"DESCRIPTION":"Delete Person",
 			    	"ROLES":{
-				    "DEFAULT":["ROLE_ADMIN"],
 				    "BATCH":["ROLE_ADMIN"],
 				    "HOOK":["ROLE_ADMIN"]
 				},

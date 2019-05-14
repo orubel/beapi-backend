@@ -32,7 +32,6 @@ net.nosegrind.Hook
 					"METHOD":"GET",
 					"DESCRIPTION":"Show ApiDocs",
 				    	"ROLES": {
-					    "DEFAULT":["permitAll"],
 				    	    "BATCH":[]
 					},
 					"REQUEST": {
