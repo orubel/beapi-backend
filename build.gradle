@@ -35,7 +35,7 @@ plugins {
     //id "com.jfrog.bintray" version "1.7.3"
 }
 
-version "0.1"
+version "1.0"
 group "@grails.app.group@"
 
 apply plugin: "org.springframework.boot"
