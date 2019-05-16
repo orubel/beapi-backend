@@ -7,12 +7,13 @@ class HookRole {
 	Date dateCreated
 	Date lastModified = new Date()
 
-	static mapping = {
-		//datasource 'user'
-	}
 	
 	static constraints = {
 		hook(nullable:false)
 		role(nullable:false)
+	}
+
+	static mapping = {
+		cache true
 	}
 }

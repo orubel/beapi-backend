@@ -12,4 +12,9 @@ class Status {
 	static constraints = {
 		statName size:2..255,nullable:false,blank: false, unique: true
 	}
+
+	static mapping = {
+		//datasource 'user'
+		cache true
+	}
 }

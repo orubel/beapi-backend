@@ -11,10 +11,6 @@ class Hook {
 	Boolean isEnabled = true
 	Date dateCreated
 	Date lastModified = new Date()
-
-	static mapping = {
-		//datasource 'user'
-	}
 	
 	static constraints = {
 		user(nullable:false)
@@ -23,5 +19,9 @@ class Hook {
 		service(nullable:false)
 		attempts(nullable:false)
 		authorization(nullable:true)
+	}
+
+	static mapping = {
+		cache true
 	}
 }

@@ -23,4 +23,5 @@ class PersistentLogin {
         id column: 'series', generator: 'assigned'
         version false
     }
+
 }

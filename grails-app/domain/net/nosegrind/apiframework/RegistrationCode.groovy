@@ -8,5 +8,6 @@ class RegistrationCode {
 
     static mapping = {
         version false
+        cache true
     }
 }
