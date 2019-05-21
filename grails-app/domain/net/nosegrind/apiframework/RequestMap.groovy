@@ -3,7 +3,7 @@ package net.nosegrind.apiframework
 import org.springframework.http.HttpMethod
 
 
-class RequestMap implements Serializable {
+class RequestMap{
 
 
     String configAttribute

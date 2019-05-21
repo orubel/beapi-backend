@@ -1,6 +1,6 @@
 package net.nosegrind.apiframework
 
-class Test implements Serializable {
+class Test{
 
 	String name
 

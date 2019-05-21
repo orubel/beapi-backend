@@ -1,7 +1,7 @@
 package net.nosegrind.apiframework
 
 //@ToString(includeNames = true, includeFields = true)
-class AuthenticationToken implements Serializable{
+class AuthenticationToken{
 
     //static mapWith = "mongo"
 

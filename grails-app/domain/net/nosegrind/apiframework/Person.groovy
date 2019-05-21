@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import grails.util.Holders
 import org.springframework.context.ApplicationContext
 
-class Person implements Serializable{
+class Person{
 
 	static transactional = true
 	static transients = ['hasBeforeInsert','hasBeforeValidate','hasBeforeUpdate','springSecurityService']
