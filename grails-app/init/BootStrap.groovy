@@ -64,6 +64,6 @@ class BootStrap {
     }
 
     def destroy = {
-	    server.stop()
+	    //server.stop()
     }
 }
