@@ -2,6 +2,7 @@
 
 //import grails.plugins.GrailsPluginManager
 //import grails.plugins.GrailsPlugin
+import net.nosegrind.apiframework.Arch
 import net.nosegrind.apiframework.Person
 import net.nosegrind.apiframework.Role
 import net.nosegrind.apiframework.PersonRole
@@ -21,8 +22,14 @@ class BootStrap {
         // Throttle
         // only instantiate if this server is 'master'; check config value
         //server = Server.createTcpServer(args).start()
-
-
+        String url = grailsApplication.config.environments.["${Environment.current}"].grails.serverURL
+        Integer cores = grailsApplication.config.apitoolkit.procCores
+        Arch architecture = Arch.findByUrl(url)
+        if(!architecture) {
+            architecture = new Arch(url:url,core:cores)
+            architecture.save(flush:true,failOnError:true)
+        }
+        
         def networkRoles = grailsApplication.config.apitoolkit.networkRoles
         networkRoles.each { k, v ->
             v.each{ it2 ->
