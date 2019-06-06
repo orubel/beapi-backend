@@ -32,8 +32,8 @@ class ServerController {
 
     HashMap pingServers(){
         HashMap list
-        Arch servers = Arch.list()
-        servers.each(){
+        Arch archs = Arch.list()
+        archs.each(){
             list.add(it.url)
         }
         HashMap servers = pingService.send(list)

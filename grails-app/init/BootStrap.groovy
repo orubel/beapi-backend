@@ -6,7 +6,8 @@ import net.nosegrind.apiframework.Arch
 import net.nosegrind.apiframework.Person
 import net.nosegrind.apiframework.Role
 import net.nosegrind.apiframework.PersonRole
-
+import grails.util.Environment
+import grails.util.Holders
 
 //import org.h2.tools.Server
 
@@ -22,11 +23,12 @@ class BootStrap {
         // Throttle
         // only instantiate if this server is 'master'; check config value
         //server = Server.createTcpServer(args).start()
-        String url = grailsApplication.config.environments.["${Environment.current}"].grails.serverURL
+
+        String url = Holders.config.grails.serverURL
         Integer cores = grailsApplication.config.apitoolkit.procCores
         Arch architecture = Arch.findByUrl(url)
         if(!architecture) {
-            architecture = new Arch(url:url,core:cores)
+            architecture = new Arch(url:url,cores:cores)
             architecture.save(flush:true,failOnError:true)
         }
         

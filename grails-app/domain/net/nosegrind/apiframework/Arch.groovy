@@ -14,7 +14,7 @@ class Arch{
 		url blank: false, unique: true
 		cores blank: false
 		hasCert blank: false
-		certExpiration blank: true
+		certExpiration nullable: true
 	}
 
 	static mapping = {
