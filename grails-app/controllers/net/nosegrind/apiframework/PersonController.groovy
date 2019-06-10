@@ -16,8 +16,10 @@ class PersonController{
 	LinkedHashMap show(){
 		try{
 			Person user = new Person()
+			//if(isSuperuser() && params?.id){
 			if(isSuperuser()){
-				user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
+				user = Person.get(springSecurityService.principal.id)
+				//user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
 			}else{
 				user = Person.get(springSecurityService.principal.id)
 				//user = springSecurityService.getCurrentUser()
@@ -25,7 +27,7 @@ class PersonController{
 			if(user){
 				return [person: user]
 			}else{
-				render(status: 500,text:"Id does not match record in database.")
+				render(status: 500,text:"Id (${params.id})does not match record in database.")
 			}
 
 		}catch(Exception e){
@@ -41,9 +43,10 @@ class PersonController{
 				if(!user.save(flush:true,failOnError:true)){
 					user.errors.allErrors.each { println(it) }
 				}
+
 				return [person:user]
 			}else{
-				render(status: 500,text:"Id does not match record in database.")
+				render(status: 500,text:"Params sent do not match requirements for database table.")
 			}
 		}catch(Exception e){
 			throw new Exception("[PersonController : get] : Exception - full stack trace follows:",e)
@@ -96,7 +99,6 @@ class PersonController{
 		Person user
 		try {
 			if(isSuperuser()){
-				println("#####SUPER######")
 				user = Person.get(params?.id?.toLong())
 			}else{
 				user = Person.get(springSecurityService.principal.id)
@@ -176,7 +178,6 @@ class PersonController{
 
 	protected boolean isSuperuser() {
 		springSecurityService.principal.authorities*.authority.any {
-			println(grailsApplication.config.apitoolkit.admin.roles)
 			((List)grailsApplication.config.apitoolkit.admin.roles).contains(it)
 		}
 	}

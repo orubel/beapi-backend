@@ -73,7 +73,6 @@ class BatchFunctionalSpec extends Specification {
             def outputStream = new StringBuffer()
             proc.waitForProcessOutput(outputStream, System.err)
             String output = outputStream.toString()
-
             info = new JsonSlurper().parseText(output)
 
         when:"info is not null"
