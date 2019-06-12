@@ -17,9 +17,7 @@ import org.grails.web.json.JSONObject
 import groovy.json.JsonSlurperClassic
 import grails.converters.JSON
 
-/**
- * See http://www.gebish.org/manual/current/ for more instructions
- */
+
 
 @Integration
 @Rollback

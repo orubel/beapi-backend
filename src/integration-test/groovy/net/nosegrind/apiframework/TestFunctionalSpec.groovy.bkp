@@ -35,12 +35,22 @@ class TestFunctionalSpec extends Specification {
 
     void setup() {
         this.controller = 'person' // init
-        LinkedHashMap cache = apiCacheService.getApiCache(controller)
+        this.cache = apiCacheService.getApiCache(controller)
         this.testService = applicationContext.getBean("testService")
         this.springSecurityService = applicationContext.getBean("springSecurityService")
         ApiCacheService apiCacheService = applicationContext.getBean("apiCacheService")
-        this.cache = apiCacheService.getApiCache(controller)
 
+        // Controllers Loop
+        grailsApplication.controllerClasses.each { controllerArtefact ->
+            //def controllerClass = controllerArtefact.getClazz()
+            this.controller = controllerArtefact.getLogicalPropertyName()
+            LinkedHashMap cache2 = apiCacheService.getApiCache(this.controller)
+            if(cache2){
+                println("### ${this.controller} EXISTS!!! ###")
+            }
+        }
+
+        //this.cache = this.testService.cache
         this.testService.initTest(this.controller)
         String className = this.controller.capitalize()
         this.clazz = grailsApplication.domainClasses.find { it.clazz.simpleName == className }.clazz
@@ -83,7 +93,7 @@ class TestFunctionalSpec extends Specification {
                 assert num == info.size()
             }
     }
-
+/*
     void "API TEST for show (non-admin)"(){
         setup:"get data"
             LinkedHashMap info
@@ -120,6 +130,7 @@ class TestFunctionalSpec extends Specification {
         String action = 'delete'
         String data = "{'id': '${this.testService.user.id}'}"
     }
+*/
 
     void cleanup() {
         this.testService.cleanupTest()

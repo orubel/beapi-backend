@@ -16,9 +16,6 @@ import static groovyx.net.http.Method.*
 
 import net.nosegrind.apiframework.Person
 
-/**
- * See http://www.gebish.org/manual/current/ for more instructions
- */
 
 @Integration
 @Rollback

@@ -16,9 +16,6 @@ import net.nosegrind.apiframework.Person
 import grails.util.Metadata
 
 
-/**
- * See http://www.gebish.org/manual/current/ for more instructions
- */
 
 @Integration
 @Rollback

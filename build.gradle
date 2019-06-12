@@ -37,10 +37,10 @@ plugins {
 
 
 
-def appVersion = (System.getenv('BEAPI_BUILD_VERSION'))?System.getenv('BEAPI_BUILD_VERSION'):'1'
+def appVersion = project.buildVersion
 def patch = (System.getenv('BUILD_NUMBER'))?System.getenv('BUILD_NUMBER'):'0'
-//version = "${appVersion}.${patch}"
-version "1.0"
+version = "${appVersion}.${patch}"
+
 group "@grails.app.group@"
 
 apply plugin: "org.springframework.boot"
