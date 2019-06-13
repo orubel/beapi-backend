@@ -84,6 +84,7 @@ class ErrorFunctionalSpec extends Specification {
         String action = 'create'
 
         String data = "{'personId': '${this.guestId}','roleId':'1'}"
+
         def info
         def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
         proc.waitFor()

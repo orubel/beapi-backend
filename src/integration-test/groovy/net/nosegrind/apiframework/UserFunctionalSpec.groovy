@@ -61,12 +61,12 @@ class UserFunctionalSpec extends Specification {
             String METHOD = "POST"
         String controller = 'person'
             String action = 'create'
-
             def info
             def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${this.guestdata}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
-            proc.waitForProcessOutput(outputStream, System.err)
+        def error = new StringWriter()
+            proc.waitForProcessOutput(outputStream, error)
             String output = outputStream.toString()
             info = new JsonSlurper().parseText(output)
             when:"info is not null"
@@ -88,7 +88,8 @@ class UserFunctionalSpec extends Specification {
             def proc = ["curl", "-H", "Content-Type: application/json", "-H", "Authorization: Bearer ${this.token}", "--request", "${METHOD}", "-d", "${data}", "${this.testDomain}/${this.appVersion}/${controller}/${action}"].execute()
             proc.waitFor()
             def outputStream = new StringBuffer()
-            proc.waitForProcessOutput(outputStream, System.err)
+            def error = new StringWriter()
+            proc.waitForProcessOutput(outputStream, error)
             String output = outputStream.toString()
             info = new JsonSlurper().parseText(output)
         when:"info is not null"

@@ -31,7 +31,7 @@ class TestController {
     }
 
     HashMap delete() {
-        try {
+        //try {
             Test test
             test = Test.get(params?.id?.toLong())
             if (test) {
@@ -42,9 +42,9 @@ class TestController {
                 render(status: 500,text:"Id does not match record in database.")
             }
             return [test: [id: params.id.toLong()]]
-        }catch(Exception e){
-            throw new Exception("[TestController : delete] : Exception - full stack trace follows:",e)
-        }
+        //}catch(Exception e){
+        //    throw new Exception("[TestController : delete] : Exception - full stack trace follows:",e)
+        //}
     }
 
     HashMap testHook() {

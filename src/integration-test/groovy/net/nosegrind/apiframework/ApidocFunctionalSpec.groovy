@@ -176,8 +176,8 @@ class ApidocFunctionalSpec extends Specification {
             proc.waitForProcessOutput(outputStream, error)
             String output = outputStream.toString()
 
-        ArrayList stdErr = error.toString().split( '> \n' )
-        println(stdErr)
+        //ArrayList stdErr = error.toString().split( '> \n' )
+        //println(stdErr)
         //ArrayList response1 = stdErr[0].split("> ")
         //ArrayList response2 = stdErr[1].split("< ")
 

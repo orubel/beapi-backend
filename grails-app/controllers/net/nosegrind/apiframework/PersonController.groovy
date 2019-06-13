@@ -18,6 +18,7 @@ class PersonController{
 			Person user = new Person()
 			//if(isSuperuser() && params?.id){
 			if(isSuperuser()){
+
 				user = Person.get(springSecurityService.principal.id)
 				//user = Person.findWhere(id: params?.id?.toLong(), enabled: true)
 			}else{
@@ -38,12 +39,10 @@ class PersonController{
 	LinkedHashMap create(){
 		try{
 			Person user = new Person(username:"${params.username}",password:"${params.password}",email:"${params.email}")
-
 			if(user){
 				if(!user.save(flush:true,failOnError:true)){
 					user.errors.allErrors.each { println(it) }
 				}
-
 				return [person:user]
 			}else{
 				render(status: 500,text:"Params sent do not match requirements for database table.")
