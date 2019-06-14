@@ -7,6 +7,7 @@ def propsFile = new File("${userHome}/.jenkins/workspace/api-framework/gradle.pr
 props.load(propsFile.newDataInputStream())
 def appVersion = props.getProperty('apiFrameworkVersion')
 
+println("### VERSION:"+appVersion)
 
 Properties props2 = new Properties()
 def propsFile2 = new File("${userHome}/.jenkins/workspace/beapi-backend/gradle.properties")
