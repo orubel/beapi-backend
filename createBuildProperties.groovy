@@ -19,15 +19,14 @@ FileInputStream in2 = new FileInputStream("${userHome}/.jenkins/workspace/beapi-
 //props2.store(out2, null)
 
 props2.load(in2)
+props2.setProperty('apiFrameworkVersion', version)
 Enumeration<String> enums = (Enumeration<String>) props2.propertyNames()
 while (enums.hasMoreElements()) {
-	String key = enums.nextElement();
+	String key = enums.nextElement()
 	String value = props2.getProperty(key)
-	//System.out.println(key + " : " + value)
-	props2.setProperty(key, value)
-	props2.store(out2, null)
+	System.out.println(key + " : " + value)
+	props2.setProperty("${key}", value)
 }
-props2.setProperty('apiFrameworkVersion', version)
 props2.store(out2, null)
 out2.close()
 
