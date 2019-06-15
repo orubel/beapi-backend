@@ -17,6 +17,6 @@ props2.load(propsFile2.newDataInputStream())
 
 props2.setProperty('apiFrameworkVersion', apiFrameworkVersion)
 props2.store(propsFile2.newWriter(), null)
-props2.close()
+//props2.close()
 
 
