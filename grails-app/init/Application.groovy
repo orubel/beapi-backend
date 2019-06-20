@@ -16,6 +16,9 @@ import org.springframework.context.EnvironmentAware
 import org.springframework.core.env.Environment
 import org.springframework.core.env.MapPropertySource
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.security.SecurityFilterAutoConfiguration
+import org.springframework.boot.autoconfigure.transaction.jta.*
 
 import org.grails.config.yaml.YamlPropertySourceLoader
 import org.springframework.core.io.ResourceLoader

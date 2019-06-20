@@ -8,9 +8,11 @@ import net.nosegrind.apiframework.Role
 import net.nosegrind.apiframework.PersonRole
 import grails.util.Environment
 import grails.util.Holders
+import grails.gorm.transactions.Transactional
 
 //import org.h2.tools.Server
 
+@Transactional('auth')
 class BootStrap {
 
     final String[] args = ["-tcpPort", "8092", "-tcpAllowOthers"]
@@ -24,16 +26,16 @@ class BootStrap {
         // only instantiate if this server is 'master'; check config value
         //server = Server.createTcpServer(args).start()
 
-        String url = Holders.config.grails.serverURL
-        Integer cores = grailsApplication.config.apitoolkit.procCores
-        Arch architecture = Arch.findByUrl(url)
-        if(!architecture) {
-            architecture = new Arch(url:url,cores:cores)
-            architecture.save(flush:true,failOnError:true)
-        }
+        //String url = Holders.config.grails.serverURL
+        //Integer cores = grailsApplication.config.apitoolkit.procCores
+        //Arch architecture = Arch.findByUrl(url)
+        //if(!architecture) {
+        //    architecture = new Arch(url:url,cores:cores)
+        //    architecture.save(flush:true,failOnError:true)
+        //}
         
         def networkRoles = grailsApplication.config.apitoolkit.networkRoles
-        networkRoles.each { k, v ->
+        networkRoles.each(){ k, v ->
             v.each{ it2 ->
                 Role role = Role.findByAuthority(it2)
                 if(!role){
@@ -45,7 +47,8 @@ class BootStrap {
 
 
         Person user = Person.findByUsername("${grailsApplication.config.root.login}")
-        PersonRole.withTransaction() { status ->
+        println("PERSON:"+user)
+        PersonRole.withTransaction { status ->
             Role adminRole = Role.findByAuthority("ROLE_ADMIN")
 
             if (!user?.id) {
@@ -56,7 +59,9 @@ class BootStrap {
                 }
             } else {
                 // user exists
+                println("### USER EXISTS ###")
                 if (!passwordEncoder.isPasswordValid(user.password, grailsApplication.config.root.password, null)) {
+                    println("\"Error: Bootstrapped Root Password was changed in config. Please update\"")
                     log.error "Error: Bootstrapped Root Password was changed in config. Please update"
                 }
             }
@@ -66,6 +71,7 @@ class BootStrap {
                 pRole.save(flush: true, failOnError: true)
             } else {
                 // role exists
+                println("### ROLE EXISTS ###")
             }
 
             status.isCompleted()

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import net.nosegrind.apiframework.ApiCacheService
 import grails.util.Metadata
-
+import grails.gorm.transactions.Transactional
 import net.nosegrind.apiframework.Person
 
 
@@ -24,7 +24,7 @@ class ApiFunctionalSpec extends Specification {
 
     @Autowired
     ApplicationContext applicationContext
-
+    def grailsApplication
     @Shared String token
     @Shared String guestToken
     @Shared List authorities = ['permitAll']
@@ -36,18 +36,46 @@ class ApiFunctionalSpec extends Specification {
     @Shared String guestlogin = 'apitest'
     @Shared String guestpassword = 'testamundo'
 
+
+
+    @Transactional('auth')
     void "login and get token"(){
         setup:"logging in"
+
             this.testDomain = Holders.grailsApplication.config.environments.test.grails.serverURL
             String login = Holders.grailsApplication.config.root.login
+        println("LOGIN:"+login)
+
+        try {
+            String className = "net.nosegrind.apiframework.Person"
+            Class Person = grailsApplication.getDomainClass(className).clazz
+            println(Person.getClass())
+            def list = Person.list()
+            println("PERSON:" + list)
+        }catch(Exception e){
+            println("ERROR:"+e)
+        }
+
             String password = Holders.grailsApplication.config.root.password
+        println("PASS:"+password)
+
+
+
             String loginUri = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
-
-            String url = "curl -H 'Content-Type: application/json' -X POST -d '{\"username\":\"${login}\",\"password\":\"${password}\"}' ${this.testDomain}${loginUri}"
-            def proc = ['bash','-c',url].execute();
+        println("${this.testDomain}${loginUri}")
+            def info
+            String url = "curl -v  -H 'Content-Type: application/json' -H 'Origin: http://localhost' -H 'Access-Control-Request-Headers: Origin,X-Requested-With' -d '{\"username\":\"${login}\",\"password\":\"${password}\"}' ${this.testDomain}${loginUri}"
+            def proc = ['bash','-c',url].execute()
             proc.waitFor()
-            def info = new JsonSlurper().parseText(proc.text)
-
+            def outputStream = new StringBuffer()
+            def error = new StringWriter()
+            proc.waitForProcessOutput(outputStream, error)
+            String output = outputStream.toString()
+            if(output) {
+                info = new JsonSlurper().parseText(output)
+            }else{
+                println("login and get token (ERR):"+error)
+            }
         when:"set token"
             this.token = info.access_token
             info.authorities.each(){ it ->
@@ -73,11 +101,14 @@ class ApiFunctionalSpec extends Specification {
 
             proc.waitFor()
             def outputStream = new StringBuffer()
-            proc.waitForProcessOutput(outputStream, System.err)
+            def error = new StringWriter()
+            proc.waitForProcessOutput(outputStream, error)
             String output = outputStream.toString()
-
-            info = new JsonSlurper().parseText(output)
-
+            if(output) {
+                info = new JsonSlurper().parseText(output)
+            }else{
+                println("CREATE user (ERR):"+error)
+            }
         when:"info is not null"
             assert info!=null
         then:"created user"

@@ -14,7 +14,6 @@ class Status {
 	}
 
 	static mapping = {
-		//datasource 'user'
 		cache true
 	}
 }

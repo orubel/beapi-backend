@@ -117,7 +117,6 @@ class Person{
 	}
 
 	static mapping = {
-		//datasource 'user'
 		password column: '`password`'
 		cache true
 	}

@@ -12,7 +12,6 @@ class Role{
 	}
 
 	static mapping = {
-		//datasource 'user'
 		cache true
 	}
 

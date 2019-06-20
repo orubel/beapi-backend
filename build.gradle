@@ -141,8 +141,6 @@ dependencies {
     provided "org.grails.plugins:hibernate5"
     provided "org.hibernate:hibernate-core:5.1.5.Final"
     provided "org.hibernate:hibernate-ehcache:5.1.5.Final"
-    //provided 'org.grails.plugins:hibernate:4.3.10.6'
-    //provided "org.hibernate:hibernate-ehcache"
     runtime 'mysql:mysql-connector-java:5.1.29'
     provided("com.h2database:h2")
 
